@@ -1,0 +1,319 @@
+local NebulaUI = {}
+NebulaUI.__index = NebulaUI
+
+-- Utility Functions
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+
+-- Configuration
+NebulaUI.Config = {
+    Theme = {
+        Primary = Color3.fromRGB(29, 32, 40),
+        Secondary = Color3.fromRGB(35, 38, 46),
+        Accent = Color3.fromRGB(86, 180, 255),
+        Text = Color3.fromRGB(240, 240, 240),
+        SubText = Color3.fromRGB(180, 180, 180),
+        Background = Color3.fromRGB(22, 24, 32),
+        Success = Color3.fromRGB(72, 199, 142),
+        Error = Color3.fromRGB(245, 71, 71),
+        Warning = Color3.fromRGB(255, 170, 0)
+    },
+    Animation = {
+        TweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        SpringInfo = {
+            Speed = 20,
+            Damping = 1,
+            MaxSpeed = 100
+        }
+    }
+}
+
+function NebulaUI.new(title)
+    local gui = {}
+    setmetatable(gui, NebulaUI)
+
+    -- Main GUI Container
+    gui.ScreenGui = Instance.new("ScreenGui")
+    gui.ScreenGui.Name = "NebulaUI"
+    gui.ScreenGui.ResetOnSpawn = false
+    gui.ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    -- Background blur effect
+    local blur = Instance.new("BlurEffect")
+    blur.Size = 10
+    blur.Parent = game:GetService("Lighting")
+    
+    -- Main Container
+    gui.MainContainer = Instance.new("Frame")
+    gui.MainContainer.Name = "MainContainer"
+    gui.MainContainer.Size = UDim2.new(0, 600, 0, 400)
+    gui.MainContainer.Position = UDim2.new(0.5, -300, 0.5, -200)
+    gui.MainContainer.BackgroundColor3 = NebulaUI.Config.Theme.Background
+    gui.MainContainer.BackgroundTransparency = 0.1
+    gui.MainContainer.ClipsDescendants = true
+    gui.MainContainer.Parent = gui.ScreenGui
+
+    -- Add glass morphism effect
+    local glassEffect = Instance.new("ImageLabel")
+    glassEffect.BackgroundTransparency = 1
+    glassEffect.Image = "rbxassetid://4641149554"
+    glassEffect.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    glassEffect.ImageTransparency = 0.95
+    glassEffect.Size = UDim2.new(1, 0, 1, 0)
+    glassEffect.Parent = gui.MainContainer
+
+    -- Main Corner
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = gui.MainContainer
+
+    -- Top Bar
+    gui.TopBar = Instance.new("Frame")
+    gui.TopBar.Name = "TopBar"
+    gui.TopBar.Size = UDim2.new(1, 0, 0, 40)
+    gui.TopBar.BackgroundColor3 = NebulaUI.Config.Theme.Primary
+    gui.TopBar.BackgroundTransparency = 0.5
+    gui.TopBar.Parent = gui.MainContainer
+
+    local topCorner = Instance.new("UICorner")
+    topCorner.CornerRadius = UDim.new(0, 12)
+    topCorner.Parent = gui.TopBar
+
+    -- Title
+    gui.Title = Instance.new("TextLabel")
+    gui.Title.Name = "Title"
+    gui.Title.Size = UDim2.new(1, -20, 1, 0)
+    gui.Title.Position = UDim2.new(0, 20, 0, 0)
+    gui.Title.BackgroundTransparency = 1
+    gui.Title.Text = title or "NebulaUI"
+    gui.Title.TextColor3 = NebulaUI.Config.Theme.Text
+    gui.Title.TextSize = 18
+    gui.Title.Font = Enum.Font.GothamBold
+    gui.Title.TextXAlignment = Enum.TextXAlignment.Left
+    gui.Title.Parent = gui.TopBar
+
+    -- Close Button
+    gui.CloseButton = Instance.new("ImageButton")
+    gui.CloseButton.Name = "CloseButton"
+    gui.CloseButton.Size = UDim2.new(0, 24, 0, 24)
+    gui.CloseButton.Position = UDim2.new(1, -32, 0, 8)
+    gui.CloseButton.BackgroundTransparency = 1
+    gui.CloseButton.Image = "rbxassetid://6031094670"
+    gui.CloseButton.ImageColor3 = NebulaUI.Config.Theme.Text
+    gui.CloseButton.Parent = gui.TopBar
+
+    -- Content Container
+    gui.ContentContainer = Instance.new("Frame")
+    gui.ContentContainer.Name = "ContentContainer"
+    gui.ContentContainer.Size = UDim2.new(1, -20, 1, -60)
+    gui.ContentContainer.Position = UDim2.new(0, 10, 0, 50)
+    gui.ContentContainer.BackgroundTransparency = 1
+    gui.ContentContainer.Parent = gui.MainContainer
+
+    -- Navigation
+    gui.Navigation = Instance.new("Frame")
+    gui.Navigation.Name = "Navigation"
+    gui.Navigation.Size = UDim2.new(0, 150, 1, 0)
+    gui.Navigation.BackgroundColor3 = NebulaUI.Config.Theme.Primary
+    gui.Navigation.BackgroundTransparency = 0.7
+    gui.Navigation.Parent = gui.ContentContainer
+
+    local navCorner = Instance.new("UICorner")
+    navCorner.CornerRadius = UDim.new(0, 8)
+    navCorner.Parent = gui.Navigation
+
+    -- Tab Container
+    gui.TabContainer = Instance.new("Frame")
+    gui.TabContainer.Name = "TabContainer"
+    gui.TabContainer.Size = UDim2.new(1, -160, 1, 0)
+    gui.TabContainer.Position = UDim2.new(0, 160, 0, 0)
+    gui.TabContainer.BackgroundTransparency = 1
+    gui.TabContainer.Parent = gui.ContentContainer
+
+    -- Setup animation and dragging
+    gui:SetupAnimations()
+    gui:MakeDraggable()
+
+    -- Parent to CoreGui if possible
+    pcall(function()
+        gui.ScreenGui.Parent = CoreGui
+    end)
+    
+    if not gui.ScreenGui.Parent then
+        gui.ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    end
+
+    return gui
+end
+
+function NebulaUI:SetupAnimations()
+    -- Open/Close animations
+    self.MainContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+    self.MainContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
+    self.MainContainer.Size = UDim2.new(0, 0, 0, 0)
+    
+    local openTween = TweenService:Create(
+        self.MainContainer,
+        TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+        {Size = UDim2.new(0, 600, 0, 400)}
+    )
+    openTween:Play()
+end
+
+function NebulaUI:MakeDraggable()
+    local dragging = false
+    local dragStart = nil
+    local startPos = nil
+
+    self.TopBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = self.MainContainer.Position
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+            local delta = input.Position - dragStart
+            self.MainContainer.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+end
+
+-- Tab System
+function NebulaUI:CreateTab(name, icon)
+    local tab = {}
+    
+    -- Tab Button
+    tab.Button = Instance.new("TextButton")
+    tab.Button.Name = name.."Tab"
+    tab.Button.Size = UDim2.new(1, -20, 0, 36)
+    tab.Button.Position = UDim2.new(0, 10, 0, #self.Navigation:GetChildren() * 46)
+    tab.Button.BackgroundColor3 = NebulaUI.Config.Theme.Secondary
+    tab.Button.BackgroundTransparency = 1
+    tab.Button.Text = ""
+    tab.Button.Parent = self.Navigation
+
+    local tabCorner = Instance.new("UICorner")
+    tabCorner.CornerRadius = UDim.new(0, 6)
+    tabCorner.Parent = tab.Button
+
+    -- Tab Icon
+    if icon then
+        local iconImage = Instance.new("ImageLabel")
+        iconImage.Size = UDim2.new(0, 20, 0, 20)
+        iconImage.Position = UDim2.new(0, 10, 0.5, -10)
+        iconImage.BackgroundTransparency = 1
+        iconImage.Image = icon
+        iconImage.ImageColor3 = NebulaUI.Config.Theme.SubText
+        iconImage.Parent = tab.Button
+    end
+
+    -- Tab Name
+    local tabName = Instance.new("TextLabel")
+    tabName.Size = UDim2.new(1, icon and -40 or -20, 1, 0)
+    tabName.Position = UDim2.new(0, icon and 40 or 10, 0, 0)
+    tabName.BackgroundTransparency = 1
+    tabName.Text = name
+    tabName.TextColor3 = NebulaUI.Config.Theme.SubText
+    tabName.TextSize = 14
+    tabName.Font = Enum.Font.GothamMedium
+    tabName.TextXAlignment = Enum.TextXAlignment.Left
+    tabName.Parent = tab.Button
+
+    -- Tab Content
+    tab.Content = Instance.new("ScrollingFrame")
+    tab.Content.Name = name.."Content"
+    tab.Content.Size = UDim2.new(1, 0, 1, 0)
+    tab.Content.BackgroundTransparency = 1
+    tab.Content.ScrollBarThickness = 2
+    tab.Content.ScrollBarImageColor3 = NebulaUI.Config.Theme.Accent
+    tab.Content.Visible = false
+    tab.Content.Parent = self.TabContainer
+
+    -- Add padding and list layout to content
+    local padding = Instance.new("UIPadding")
+    padding.PaddingTop = UDim.new(0, 10)
+    padding.PaddingLeft = UDim.new(0, 10)
+    padding.PaddingRight = UDim.new(0, 10)
+    padding.Parent = tab.Content
+
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Padding = UDim.new(0, 10)
+    listLayout.Parent = tab.Content
+
+    -- Tab Selection Logic
+    tab.Button.MouseButton1Click:Connect(function()
+        -- Hide all other tabs
+        for _, child in pairs(self.TabContainer:GetChildren()) do
+            if child:IsA("ScrollingFrame") then
+                child.Visible = false
+            end
+        end
+        
+        -- Show selected tab
+        tab.Content.Visible = true
+        
+        -- Update appearance of all tab buttons
+        for _, child in pairs(self.Navigation:GetChildren()) do
+            if child:IsA("TextButton") then
+                TweenService:Create(child, NebulaUI.Config.Animation.TweenInfo, {
+                    BackgroundTransparency = 1
+                }):Play()
+                
+                local textLabel = child:FindFirstChildOfClass("TextLabel")
+                if textLabel then
+                    TweenService:Create(textLabel, NebulaUI.Config.Animation.TweenInfo, {
+                        TextColor3 = NebulaUI.Config.Theme.SubText
+                    }):Play()
+                end
+                
+                local icon = child:FindFirstChildOfClass("ImageLabel")
+                if icon then
+                    TweenService:Create(icon, NebulaUI.Config.Animation.TweenInfo, {
+                        ImageColor3 = NebulaUI.Config.Theme.SubText
+                    }):Play()
+                end
+            end
+        end
+        
+        -- Update selected tab appearance
+        TweenService:Create(tab.Button, NebulaUI.Config.Animation.TweenInfo, {
+            BackgroundTransparency = 0
+        }):Play()
+        
+        TweenService:Create(tabName, NebulaUI.Config.Animation.TweenInfo, {
+            TextColor3 = NebulaUI.Config.Theme.Text
+        }):Play()
+        
+        if icon then
+            local iconLabel = tab.Button:FindFirstChildOfClass("ImageLabel")
+            if iconLabel then
+                TweenService:Create(iconLabel, NebulaUI.Config.Animation.TweenInfo, {
+                    ImageColor3 = NebulaUI.Config.Theme.Text
+                }):Play()
+            end
+        end
+    end)
+
+    return tab
+end
+
+-- Element creation methods will go here...
+-- (Button, Toggle, Slider, Dropdown, etc.)
+
+return NebulaUI
