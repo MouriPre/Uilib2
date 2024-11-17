@@ -483,5 +483,275 @@ function NebulaUI:CreateToggle(tab, text, default, callback)
     }
 end
 
+-- Thêm vào phần cuối file NebulaUI, trước return
+
+-- Slider Element
+function NebulaUI:CreateSlider(tab, text, min, max, default, callback)
+    local slider = Instance.new("Frame")
+    slider.Name = "Slider"
+    slider.Size = UDim2.new(1, 0, 0, 50)
+    slider.BackgroundColor3 = self.Config.Theme.Secondary
+    slider.BackgroundTransparency = 0.2
+    slider.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = slider
+
+    local sliderText = Instance.new("TextLabel")
+    sliderText.Size = UDim2.new(1, -20, 0, 20)
+    sliderText.Position = UDim2.new(0, 10, 0, 5)
+    sliderText.BackgroundTransparency = 1
+    sliderText.Text = text
+    sliderText.TextColor3 = self.Config.Theme.Text
+    sliderText.TextSize = 14
+    sliderText.Font = Enum.Font.GothamMedium
+    sliderText.TextXAlignment = Enum.TextXAlignment.Left
+    sliderText.Parent = slider
+
+    local valueText = Instance.new("TextLabel")
+    valueText.Size = UDim2.new(0, 50, 0, 20)
+    valueText.Position = UDim2.new(1, -60, 0, 5)
+    valueText.BackgroundTransparency = 1
+    valueText.Text = tostring(default)
+    valueText.TextColor3 = self.Config.Theme.Text
+    valueText.TextSize = 14
+    valueText.Font = Enum.Font.GothamMedium
+    valueText.TextXAlignment = Enum.TextXAlignment.Right
+    valueText.Parent = slider
+
+    local sliderBar = Instance.new("Frame")
+    sliderBar.Name = "SliderBar"
+    sliderBar.Size = UDim2.new(1, -20, 0, 4)
+    sliderBar.Position = UDim2.new(0, 10, 0, 35)
+    sliderBar.BackgroundColor3 = self.Config.Theme.Primary
+    sliderBar.Parent = slider
+
+    local sliderBarCorner = Instance.new("UICorner")
+    sliderBarCorner.CornerRadius = UDim.new(1, 0)
+    sliderBarCorner.Parent = sliderBar
+
+    local sliderFill = Instance.new("Frame")
+    sliderFill.Name = "SliderFill"
+    sliderFill.Size = UDim2.new(0, 0, 1, 0)
+    sliderFill.BackgroundColor3 = self.Config.Theme.Accent
+    sliderFill.Parent = sliderBar
+
+    local sliderFillCorner = Instance.new("UICorner")
+    sliderFillCorner.CornerRadius = UDim.new(1, 0)
+    sliderFillCorner.Parent = sliderFill
+
+    local knob = Instance.new("TextButton")
+    knob.Name = "Knob"
+    knob.Size = UDim2.new(0, 16, 0, 16)
+    knob.Position = UDim2.new(0, -8, 0.5, -8)
+    knob.BackgroundColor3 = self.Config.Theme.Text
+    knob.Text = ""
+    knob.AutoButtonColor = false
+    knob.Parent = sliderFill
+
+    local knobCorner = Instance.new("UICorner")
+    knobCorner.CornerRadius = UDim.new(1, 0)
+    knobCorner.Parent = knob
+
+    -- Slider Logic
+    local UserInputService = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
+    local dragging = false
+    local value = default or min
+
+    local function updateSlider(input)
+        local pos = UDim2.new(math.clamp((input.Position.X - sliderBar.AbsolutePosition.X) / sliderBar.AbsoluteSize.X, 0, 1), 0, 1, 0)
+        TweenService:Create(sliderFill, TweenInfo.new(0.1), {Size = pos}):Play()
+        
+        local val = math.floor(((pos.X.Scale * (max - min)) + min) * 10) / 10
+        valueText.Text = tostring(val)
+        value = val
+        
+        if callback then
+            callback(val)
+        end
+    end
+
+    knob.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            updateSlider(input)
+        end
+    end)
+
+    -- Set default value
+    local defaultScale = (default - min) / (max - min)
+    sliderFill.Size = UDim2.new(defaultScale, 0, 1, 0)
+
+    return {
+        Instance = slider,
+        SetValue = function(val)
+            value = math.clamp(val, min, max)
+            local scale = (value - min) / (max - min)
+            sliderFill.Size = UDim2.new(scale, 0, 1, 0)
+            valueText.Text = tostring(value)
+            if callback then
+                callback(value)
+            end
+        end,
+        GetValue = function()
+            return value
+        end
+    }
+end
+
+-- Dropdown Element
+function NebulaUI:CreateDropdown(tab, text, options, default, callback)
+    local dropdown = Instance.new("Frame")
+    dropdown.Name = "Dropdown"
+    dropdown.Size = UDim2.new(1, 0, 0, 36)
+    dropdown.BackgroundColor3 = self.Config.Theme.Secondary
+    dropdown.BackgroundTransparency = 0.2
+    dropdown.ClipsDescendants = true
+    dropdown.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = dropdown
+
+    local dropdownButton = Instance.new("TextButton")
+    dropdownButton.Name = "DropdownButton"
+    dropdownButton.Size = UDim2.new(1, 0, 0, 36)
+    dropdownButton.BackgroundTransparency = 1
+    dropdownButton.Text = ""
+    dropdownButton.Parent = dropdown
+
+    local dropdownText = Instance.new("TextLabel")
+    dropdownText.Size = UDim2.new(1, -40, 1, 0)
+    dropdownText.Position = UDim2.new(0, 10, 0, 0)
+    dropdownText.BackgroundTransparency = 1
+    dropdownText.Text = text
+    dropdownText.TextColor3 = self.Config.Theme.Text
+    dropdownText.TextSize = 14
+    dropdownText.Font = Enum.Font.GothamMedium
+    dropdownText.TextXAlignment = Enum.TextXAlignment.Left
+    dropdownText.Parent = dropdownButton
+
+    local selectedText = Instance.new("TextLabel")
+    selectedText.Size = UDim2.new(0, 100, 1, 0)
+    selectedText.Position = UDim2.new(1, -110, 0, 0)
+    selectedText.BackgroundTransparency = 1
+    selectedText.Text = default or "Select"
+    selectedText.TextColor3 = self.Config.Theme.Accent
+    selectedText.TextSize = 14
+    selectedText.Font = Enum.Font.GothamMedium
+    selectedText.TextXAlignment = Enum.TextXAlignment.Right
+    selectedText.Parent = dropdownButton
+
+    local arrow = Instance.new("ImageLabel")
+    arrow.Size = UDim2.new(0, 20, 0, 20)
+    arrow.Position = UDim2.new(1, -30, 0.5, -10)
+    arrow.BackgroundTransparency = 1
+    arrow.Image = "rbxassetid://6034818372"
+    arrow.ImageColor3 = self.Config.Theme.Text
+    arrow.Parent = dropdownButton
+
+    -- Options Container
+    local optionsFrame = Instance.new("Frame")
+    optionsFrame.Name = "Options"
+    optionsFrame.Size = UDim2.new(1, -20, 0, #options * 30)
+    optionsFrame.Position = UDim2.new(0, 10, 0, 46)
+    optionsFrame.BackgroundTransparency = 1
+    optionsFrame.Visible = false
+    optionsFrame.Parent = dropdown
+
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 5)
+    listLayout.Parent = optionsFrame
+
+    -- Create option buttons
+    local selected = default
+    local isOpen = false
+
+    local function createOption(optionText)
+        local option = Instance.new("TextButton")
+        option.Size = UDim2.new(1, 0, 0, 25)
+        option.BackgroundColor3 = self.Config.Theme.Primary
+        option.BackgroundTransparency = 0.2
+        option.Text = optionText
+        option.TextColor3 = self.Config.Theme.Text
+        option.TextSize = 14
+        option.Font = Enum.Font.GothamMedium
+        option.Parent = optionsFrame
+
+        local optionCorner = Instance.new("UICorner")
+        optionCorner.CornerRadius = UDim.new(0, 4)
+        optionCorner.Parent = option
+
+        option.MouseButton1Click:Connect(function()
+            selected = optionText
+            selectedText.Text = optionText
+            if callback then
+                callback(optionText)
+            end
+            
+            -- Close dropdown
+            TweenService:Create(dropdown, TweenInfo.new(0.2), {
+                Size = UDim2.new(1, 0, 0, 36)
+            }):Play()
+            TweenService:Create(arrow, TweenInfo.new(0.2), {
+                Rotation = 0
+            }):Play()
+            isOpen = false
+            optionsFrame.Visible = false
+        end)
+
+        return option
+    end
+
+    for _, option in ipairs(options) do
+        createOption(option)
+    end
+
+    -- Toggle dropdown
+    dropdownButton.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        if isOpen then
+            dropdown.Size = UDim2.new(1, 0, 0, 46 + optionsFrame.AbsoluteSize.Y)
+            TweenService:Create(arrow, TweenInfo.new(0.2), {
+                Rotation = 180
+            }):Play()
+            optionsFrame.Visible = true
+        else
+            TweenService:Create(dropdown, TweenInfo.new(0.2), {
+                Size = UDim2.new(1, 0, 0, 36)
+            }):Play()
+            TweenService:Create(arrow, TweenInfo.new(0.2), {
+                Rotation = 0
+            }):Play()
+            optionsFrame.Visible = false
+        end
+    end)
+
+    return {
+        Instance = dropdown,
+        SetValue = function(value)
+            selected = value
+            selectedText.Text = value
+            if callback then
+                callback(value)
+            end
+        end,
+        GetValue = function()
+            return selected
+        end
+    }
+end
+
 
 return NebulaUI
