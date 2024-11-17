@@ -58,11 +58,11 @@ function RadarUI.new(title)
     ui.MainFrame = Instance.new("Frame")
     ui.MainFrame.Name = "MainContainer"
     if isMobile then
-        ui.MainFrame.Size = UDim2.new(0.95, 0, 0.6, 0)
-        ui.MainFrame.Position = UDim2.new(0.5, 0, 0.3, 0)
+        ui.MainFrame.Size = UDim2.new(0, 400, 0, 600)
+        ui.MainFrame.Position = UDim2.new(0.5, -200, 0.5, -300)
     else
-        ui.MainFrame.Size = UDim2.new(0, 800, 0, 500)
-        ui.MainFrame.Position = UDim2.new(0.5, -400, 0.5, -250)
+        ui.MainFrame.Size = UDim2.new(0, 400, 0, 600)
+        ui.MainFrame.Position = UDim2.new(0.5, -200, 0.5, -300)
     end
     ui.MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
     ui.MainFrame.BorderSizePixel = 0
@@ -90,11 +90,7 @@ function RadarUI.new(title)
     -- Top Bar
     ui.TopBar = Instance.new("Frame")
     ui.TopBar.Name = "TopBar"
-    if isMobile then
-        ui.TopBar.Size = UDim2.new(1, 0, 0, 50)
-    else
-        ui.TopBar.Size = UDim2.new(1, 0, 0, 40)
-    end
+    ui.TopBar.Size = UDim2.new(1, 0, 0, 40)
     ui.TopBar.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     ui.TopBar.BorderSizePixel = 0
     ui.TopBar.Parent = ui.MainFrame
@@ -105,36 +101,35 @@ function RadarUI.new(title)
     ui.Title.Position = UDim2.new(0, 15, 0, 0)
     ui.Title.BackgroundTransparency = 1
     ui.Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ui.Title.TextSize = isMobile and 24 or 20
+    ui.Title.TextSize = 20
     ui.Title.Font = Enum.Font.GothamBold
     ui.Title.Text = title or "Radar UI"
     ui.Title.TextXAlignment = Enum.TextXAlignment.Left
     ui.Title.Parent = ui.TopBar
     
     -- Minimize Button
-    local buttonSize = isMobile and 50 or 40
     ui.MinimizeButton = Instance.new("TextButton")
-    ui.MinimizeButton.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-    ui.MinimizeButton.Position = UDim2.new(1, -buttonSize, 0, 0)
+    ui.MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
+    ui.MinimizeButton.Position = UDim2.new(1, -40, 0, 0)
     ui.MinimizeButton.BackgroundTransparency = 1
     ui.MinimizeButton.Text = "-"
     ui.MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ui.MinimizeButton.TextSize = isMobile and 30 or 24
+    ui.MinimizeButton.TextSize = 24
     ui.MinimizeButton.Font = Enum.Font.GothamBold
     ui.MinimizeButton.Parent = ui.TopBar
     
     -- Content Frame
     ui.ContentFrame = Instance.new("Frame")
     ui.ContentFrame.Name = "ContentFrame"
-    ui.ContentFrame.Size = UDim2.new(1, 0, 1, -(isMobile and 50 or 40))
-    ui.ContentFrame.Position = UDim2.new(0, 0, 0, isMobile and 50 or 40)
+    ui.ContentFrame.Size = UDim2.new(1, 0, 1, -40)
+    ui.ContentFrame.Position = UDim2.new(0, 0, 0, 40)
     ui.ContentFrame.BackgroundTransparency = 1
     ui.ContentFrame.Parent = ui.MainFrame
     
     -- Add Rounded Corners
     local function AddCorners(instance, radius)
         local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, radius or (isMobile and 12 or 8))
+        corner.CornerRadius = UDim.new(0, radius or 8)
         corner.Parent = instance
     end
     
@@ -152,76 +147,31 @@ function RadarUI.new(title)
                 CreateTween(button, {TextColor3 = Color3.fromRGB(255, 255, 255)}, 0.2):Play()
             end)
         end
-        
-        button.MouseButton1Down:Connect(function()
-            CreateTween(button, {TextTransparency = 0.5}, 0.1):Play()
-        end)
-        
-        button.MouseButton1Up:Connect(function()
-            CreateTween(button, {TextTransparency = 0}, 0.1):Play()
-        end)
     end
     
     AddButtonHoverEffect(ui.MinimizeButton)
     
     -- Toggle Logic
     local isUIOpen = true
-    ui.ToggleButton.MouseButton1Click:Connect(function()
+    ui.MinimizeButton.MouseButton1Click:Connect(function()
         isUIOpen = not isUIOpen
         
-        -- Animate toggle button
-        local rotation = isUIOpen and 0 or 180
-        local color = isUIOpen and Color3.fromRGB(45, 100, 255) or Color3.fromRGB(255, 255, 255)
-        CreateTween(ui.ToggleButton, {Rotation = rotation}, 0.3):Play()
-        CreateTween(ToggleGlow, {ImageColor3 = color}, 0.3):Play()
-        
-        -- Animate main UI
         if isUIOpen then
-            BlurEffect.Enabled = true
             ui.MainFrame.Visible = true
-            if isMobile then
-                CreateTween(ui.MainFrame, {
-                    Size = UDim2.new(0.95, 0, 0.6, 0),
-                    Position = UDim2.new(0.5, 0, 0.3, 0),
-                    BackgroundTransparency = 0
-                }, 0.3):Play()
-            else
-                CreateTween(ui.MainFrame, {
-                    Size = UDim2.new(0, 800, 0, 500),
-                    Position = UDim2.new(0.5, -400, 0.5, -250),
-                    BackgroundTransparency = 0
-                }, 0.3):Play()
-            end
+            CreateTween(ui.MainFrame, {
+                Size = UDim2.new(0, 400, 0, 600),
+                BackgroundTransparency = 0
+            }, 0.3):Play()
             CreateTween(GlowFrame, {ImageTransparency = 0.5}, 0.3):Play()
+            BlurEffect.Enabled = true
         else
             CreateTween(ui.MainFrame, {
-                Size = UDim2.new(0, 0, 0, 0),
-                Position = UDim2.new(0.5, 0, 0.5, 0),
                 BackgroundTransparency = 1
             }, 0.3).Completed:Connect(function()
                 ui.MainFrame.Visible = false
-                BlurEffect.Enabled = false
             end)
             CreateTween(GlowFrame, {ImageTransparency = 1}, 0.3):Play()
-        end
-    end)
-    
-    -- Minimize Logic
-    local minimized = false
-    ui.MinimizeButton.MouseButton1Click:Connect(function()
-        minimized = not minimized
-        if minimized then
-            if isMobile then
-                CreateTween(ui.MainFrame, {Size = UDim2.new(0.95, 0, 0, 50)}, 0.3):Play()
-            else
-                CreateTween(ui.MainFrame, {Size = UDim2.new(0, 800, 0, 40)}, 0.3):Play()
-            end
-        else
-            if isMobile then
-                CreateTween(ui.MainFrame, {Size = UDim2.new(0.95, 0, 0.6, 0)}, 0.3):Play()
-            else
-                CreateTween(ui.MainFrame, {Size = UDim2.new(0, 800, 0, 500)}, 0.3):Play()
-            end
+            BlurEffect.Enabled = false
         end
     end)
     
@@ -265,15 +215,8 @@ function RadarUI.new(title)
     end
     
     -- Initial state
-    if not isUIOpen then
-        ui.MainFrame.Visible = false
-        ui.MainFrame.Size = UDim2.new(0, 0, 0, 0)
-        ui.MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-        ui.MainFrame.BackgroundTransparency = 1
-        GlowFrame.ImageTransparency = 1
-        BlurEffect.Enabled = false
-        ui.ToggleButton.Rotation = 180
-    end
+    ui.MainFrame.Visible = true
+    BlurEffect.Enabled = true
     
     ui.ScreenGui.Parent = game:GetService("CoreGui")
     
