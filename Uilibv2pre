@@ -315,5 +315,173 @@ end
 
 -- Element creation methods will go here...
 -- (Button, Toggle, Slider, Dropdown, etc.)
+-- Thêm vào phần cuối file NebulaUI, trước return
+
+-- Button Element
+function NebulaUI:CreateButton(tab, text, callback)
+    local button = Instance.new("TextButton")
+    button.Name = "Button"
+    button.Size = UDim2.new(1, 0, 0, 36)
+    button.BackgroundColor3 = self.Config.Theme.Secondary
+    button.BackgroundTransparency = 0.2
+    button.Text = ""
+    button.AutoButtonColor = false
+    button.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
+
+    local buttonText = Instance.new("TextLabel")
+    buttonText.Size = UDim2.new(1, -20, 1, 0)
+    buttonText.Position = UDim2.new(0, 10, 0, 0)
+    buttonText.BackgroundTransparency = 1
+    buttonText.Text = text
+    buttonText.TextColor3 = self.Config.Theme.Text
+    buttonText.TextSize = 14
+    buttonText.Font = Enum.Font.GothamMedium
+    buttonText.TextXAlignment = Enum.TextXAlignment.Left
+    buttonText.Parent = button
+
+    -- Hover & Click Effects
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, self.Config.Animation.TweenInfo, {
+            BackgroundTransparency = 0
+        }):Play()
+    end)
+
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, self.Config.Animation.TweenInfo, {
+            BackgroundTransparency = 0.2
+        }):Play()
+    end)
+
+    button.MouseButton1Down:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {
+            Size = UDim2.new(1, -4, 0, 32)
+        }):Play()
+    end)
+
+    button.MouseButton1Up:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1), {
+            Size = UDim2.new(1, 0, 0, 36)
+        }):Play()
+        
+        if callback then
+            callback()
+        end
+    end)
+
+    return button
+end
+
+-- Toggle Element
+function NebulaUI:CreateToggle(tab, text, default, callback)
+    local toggle = Instance.new("TextButton")
+    toggle.Name = "Toggle"
+    toggle.Size = UDim2.new(1, 0, 0, 36)
+    toggle.BackgroundColor3 = self.Config.Theme.Secondary
+    toggle.BackgroundTransparency = 0.2
+    toggle.Text = ""
+    toggle.AutoButtonColor = false
+    toggle.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = toggle
+
+    local toggleText = Instance.new("TextLabel")
+    toggleText.Size = UDim2.new(1, -60, 1, 0)
+    toggleText.Position = UDim2.new(0, 10, 0, 0)
+    toggleText.BackgroundTransparency = 1
+    toggleText.Text = text
+    toggleText.TextColor3 = self.Config.Theme.Text
+    toggleText.TextSize = 14
+    toggleText.Font = Enum.Font.GothamMedium
+    toggleText.TextXAlignment = Enum.TextXAlignment.Left
+    toggleText.Parent = toggle
+
+    -- Toggle Indicator
+    local indicator = Instance.new("Frame")
+    indicator.Name = "Indicator"
+    indicator.Size = UDim2.new(0, 40, 0, 20)
+    indicator.Position = UDim2.new(1, -50, 0.5, -10)
+    indicator.BackgroundColor3 = self.Config.Theme.Primary
+    indicator.BackgroundTransparency = 0
+    indicator.Parent = toggle
+
+    local indicatorCorner = Instance.new("UICorner")
+    indicatorCorner.CornerRadius = UDim.new(1, 0)
+    indicatorCorner.Parent = indicator
+
+    local knob = Instance.new("Frame")
+    knob.Name = "Knob"
+    knob.Size = UDim2.new(0, 16, 0, 16)
+    knob.Position = UDim2.new(0, 2, 0.5, -8)
+    knob.BackgroundColor3 = self.Config.Theme.Text
+    knob.Parent = indicator
+
+    local knobCorner = Instance.new("UICorner")
+    knobCorner.CornerRadius = UDim.new(1, 0)
+    knobCorner.Parent = knob
+
+    -- Toggle State
+    local enabled = default or false
+    local function updateToggle()
+        if enabled then
+            TweenService:Create(indicator, self.Config.Animation.TweenInfo, {
+                BackgroundColor3 = self.Config.Theme.Accent
+            }):Play()
+            TweenService:Create(knob, self.Config.Animation.TweenInfo, {
+                Position = UDim2.new(1, -18, 0.5, -8)
+            }):Play()
+        else
+            TweenService:Create(indicator, self.Config.Animation.TweenInfo, {
+                BackgroundColor3 = self.Config.Theme.Primary
+            }):Play()
+            TweenService:Create(knob, self.Config.Animation.TweenInfo, {
+                Position = UDim2.new(0, 2, 0.5, -8)
+            }):Play()
+        end
+        
+        if callback then
+            callback(enabled)
+        end
+    end
+
+    -- Initial state
+    updateToggle()
+
+    -- Hover Effect
+    toggle.MouseEnter:Connect(function()
+        TweenService:Create(toggle, self.Config.Animation.TweenInfo, {
+            BackgroundTransparency = 0
+        }):Play()
+    end)
+
+    toggle.MouseLeave:Connect(function()
+        TweenService:Create(toggle, self.Config.Animation.TweenInfo, {
+            BackgroundTransparency = 0.2
+        }):Play()
+    end)
+
+    -- Toggle Logic
+    toggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        updateToggle()
+    end)
+
+    return {
+        Instance = toggle,
+        SetState = function(state)
+            enabled = state
+            updateToggle()
+        end,
+        GetState = function()
+            return enabled
+        end
+    }
+end
+
 
 return NebulaUI
