@@ -1,0 +1,216 @@
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+local RadarUI = {}
+RadarUI.__index = RadarUI
+
+-- Utility Functions
+local function CreateTween(instance, props, time, style, dir)
+    local info = TweenInfo.new(time or 0.5, style or Enum.EasingStyle.Quart, dir or Enum.EasingDirection.Out)
+    local tween = TweenService:Create(instance, info, props)
+    return tween
+end
+
+-- Main Constructor
+function RadarUI.new(title)
+    local ui = {}
+    setmetatable(ui, RadarUI)
+    
+    -- Main GUI
+    ui.ScreenGui = Instance.new("ScreenGui")
+    ui.ScreenGui.Name = "RadarUI"
+    ui.ScreenGui.ResetOnSpawn = false
+    ui.ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    -- Blur Effect
+    ui.Blur = Instance.new("BlurEffect")
+    ui.Blur.Size = 0
+    ui.Blur.Parent = game:GetService("Lighting")
+    
+    -- Main Container
+    ui.MainFrame = Instance.new("Frame")
+    ui.MainFrame.Name = "MainContainer"
+    ui.MainFrame.Size = UDim2.new(0, 800, 0, 500)
+    ui.MainFrame.Position = UDim2.new(0.5, -400, 0.5, -250)
+    ui.MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    ui.MainFrame.BorderSizePixel = 0
+    ui.MainFrame.ClipsDescendants = true
+    ui.MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    ui.MainFrame.Parent = ui.ScreenGui
+    
+    -- Background Effects
+    ui.BackgroundEffect = Instance.new("Frame")
+    ui.BackgroundEffect.Size = UDim2.new(1, 0, 1, 0)
+    ui.BackgroundEffect.BackgroundTransparency = 0.9
+    ui.BackgroundEffect.BorderSizePixel = 0
+    ui.BackgroundEffect.ZIndex = 0
+    ui.BackgroundEffect.Parent = ui.MainFrame
+    
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 100, 255)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 50, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 100, 255))
+    })
+    gradient.Parent = ui.BackgroundEffect
+    
+    -- Animate Background
+    local gradientRotation = 0
+    RunService.RenderStepped:Connect(function()
+        gradientRotation = gradientRotation + 1
+        gradient.Rotation = gradientRotation
+    end)
+    
+    -- Top Bar
+    ui.TopBar = Instance.new("Frame")
+    ui.TopBar.Name = "TopBar"
+    ui.TopBar.Size = UDim2.new(1, 0, 0, 40)
+    ui.TopBar.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    ui.TopBar.BorderSizePixel = 0
+    ui.TopBar.Parent = ui.MainFrame
+    
+    -- Title
+    ui.Title = Instance.new("TextLabel")
+    ui.Title.Size = UDim2.new(0.5, 0, 1, 0)
+    ui.Title.Position = UDim2.new(0, 15, 0, 0)
+    ui.Title.BackgroundTransparency = 1
+    ui.Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ui.Title.TextSize = 20
+    ui.Title.Font = Enum.Font.GothamBold
+    ui.Title.Text = title or "Radar UI"
+    ui.Title.TextXAlignment = Enum.TextXAlignment.Left
+    ui.Title.Parent = ui.TopBar
+    
+    -- Close Button
+    ui.CloseButton = Instance.new("TextButton")
+    ui.CloseButton.Size = UDim2.new(0, 40, 0, 40)
+    ui.CloseButton.Position = UDim2.new(1, -40, 0, 0)
+    ui.CloseButton.BackgroundTransparency = 1
+    ui.CloseButton.Text = "×"
+    ui.CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ui.CloseButton.TextSize = 24
+    ui.CloseButton.Font = Enum.Font.GothamBold
+    ui.CloseButton.Parent = ui.TopBar
+    
+    -- Minimize Button
+    ui.MinimizeButton = Instance.new("TextButton")
+    ui.MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
+    ui.MinimizeButton.Position = UDim2.new(1, -80, 0, 0)
+    ui.MinimizeButton.BackgroundTransparency = 1
+    ui.MinimizeButton.Text = "-"
+    ui.MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ui.MinimizeButton.TextSize = 24
+    ui.MinimizeButton.Font = Enum.Font.GothamBold
+    ui.MinimizeButton.Parent = ui.TopBar
+    
+    -- Add Rounded Corners
+    local function AddCorners(instance, radius)
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, radius or 8)
+        corner.Parent = instance
+    end
+    
+    AddCorners(ui.MainFrame, 10)
+    AddCorners(ui.TopBar, 10)
+    
+    -- Add Glow Effect
+    local function AddGlow(instance, color)
+        local glow = Instance.new("ImageLabel")
+        glow.Name = "Glow"
+        glow.BackgroundTransparency = 1
+        glow.Position = UDim2.new(0, -15, 0, -15)
+        glow.Size = UDim2.new(1, 30, 1, 30)
+        glow.ZIndex = 0
+        glow.Image = "rbxassetid://4996891970" -- Glow texture
+        glow.ImageColor3 = color or Color3.fromRGB(45, 100, 255)
+        glow.ImageTransparency = 0.9
+        glow.Parent = instance
+    end
+    
+    AddGlow(ui.MainFrame)
+    
+    -- Button Hover Effects
+    local function AddButtonHoverEffect(button)
+        button.MouseEnter:Connect(function()
+            CreateTween(button, {TextColor3 = Color3.fromRGB(45, 100, 255)}, 0.2):Play()
+        end)
+        
+        button.MouseLeave:Connect(function()
+            CreateTween(button, {TextColor3 = Color3.fromRGB(255, 255, 255)}, 0.2):Play()
+        end)
+    end
+    
+    AddButtonHoverEffect(ui.CloseButton)
+    AddButtonHoverEffect(ui.MinimizeButton)
+    
+    -- Close Button Logic
+    ui.CloseButton.MouseButton1Click:Connect(function()
+        CreateTween(ui.Blur, {Size = 0}, 0.2):Play()
+        CreateTween(ui.MainFrame, {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}, 0.3).Completed:Connect(function()
+            ui.ScreenGui:Destroy()
+        end)
+    end)
+    
+    -- Minimize Button Logic
+    local minimized = false
+    ui.MinimizeButton.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        if minimized then
+            CreateTween(ui.MainFrame, {Size = UDim2.new(0, 800, 0, 40)}, 0.3):Play()
+        else
+            CreateTween(ui.MainFrame, {Size = UDim2.new(0, 800, 0, 500)}, 0.3):Play()
+        end
+    end)
+    
+    -- Make Draggable
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+    
+    local function UpdateDrag(input)
+        local delta = input.Position - dragStart
+        CreateTween(ui.MainFrame, {Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)}, 0.1):Play()
+    end
+    
+    ui.TopBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = ui.MainFrame.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    ui.TopBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            UpdateDrag(input)
+        end
+    end)
+    
+    -- Opening Animation
+    ui.MainFrame.Size = UDim2.new(0, 0, 0, 0)
+    ui.MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    CreateTween(ui.MainFrame, {Size = UDim2.new(0, 800, 0, 500), Position = UDim2.new(0.5, -400, 0.5, -250)}, 0.3):Play()
+    CreateTween(ui.Blur, {Size = 10}, 0.2):Play()
+    
+    -- Parent GUI
+    ui.ScreenGui.Parent = game:GetService("CoreGui")
+    
+    return ui
+end
+
+return RadarUI
