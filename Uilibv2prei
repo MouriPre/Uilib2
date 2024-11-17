@@ -753,5 +753,260 @@ function NebulaUI:CreateDropdown(tab, text, options, default, callback)
     }
 end
 
+-- Thêm vào phần cuối file NebulaUI, trước return
+
+-- Input Field Element
+function NebulaUI:CreateInput(tab, text, placeholder, callback)
+    local input = Instance.new("Frame")
+    input.Name = "Input"
+    input.Size = UDim2.new(1, 0, 0, 36)
+    input.BackgroundColor3 = self.Config.Theme.Secondary
+    input.BackgroundTransparency = 0.2
+    input.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = input
+
+    local inputText = Instance.new("TextLabel")
+    inputText.Size = UDim2.new(0.4, -10, 1, 0)
+    inputText.Position = UDim2.new(0, 10, 0, 0)
+    inputText.BackgroundTransparency = 1
+    inputText.Text = text
+    inputText.TextColor3 = self.Config.Theme.Text
+    inputText.TextSize = 14
+    inputText.Font = Enum.Font.GothamMedium
+    inputText.TextXAlignment = Enum.TextXAlignment.Left
+    inputText.Parent = input
+
+    local inputBox = Instance.new("TextBox")
+    inputBox.Size = UDim2.new(0.6, -20, 0, 26)
+    inputBox.Position = UDim2.new(0.4, 10, 0.5, -13)
+    inputBox.BackgroundColor3 = self.Config.Theme.Primary
+    inputBox.BackgroundTransparency = 0.1
+    inputBox.Text = ""
+    inputBox.PlaceholderText = placeholder or "Enter text..."
+    inputBox.TextColor3 = self.Config.Theme.Text
+    inputBox.PlaceholderColor3 = self.Config.Theme.TextDark
+    inputBox.TextSize = 14
+    inputBox.Font = Enum.Font.GothamMedium
+    inputBox.Parent = input
+
+    local inputBoxCorner = Instance.new("UICorner")
+    inputBoxCorner.CornerRadius = UDim.new(0, 4)
+    inputBoxCorner.Parent = inputBox
+
+    -- Input Logic
+    inputBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed and callback then
+            callback(inputBox.Text)
+        end
+    end)
+
+    return {
+        Instance = input,
+        GetText = function()
+            return inputBox.Text
+        end,
+        SetText = function(text)
+            inputBox.Text = text
+            if callback then
+                callback(text)
+            end
+        end,
+        ClearText = function()
+            inputBox.Text = ""
+        end
+    }
+end
+
+-- ColorPicker Element
+function NebulaUI:CreateColorPicker(tab, text, default, callback)
+    local colorPicker = Instance.new("Frame")
+    colorPicker.Name = "ColorPicker"
+    colorPicker.Size = UDim2.new(1, 0, 0, 36)
+    colorPicker.BackgroundColor3 = self.Config.Theme.Secondary
+    colorPicker.BackgroundTransparency = 0.2
+    colorPicker.ClipsDescendants = true
+    colorPicker.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = colorPicker
+
+    local colorText = Instance.new("TextLabel")
+    colorText.Size = UDim2.new(1, -60, 1, 0)
+    colorText.Position = UDim2.new(0, 10, 0, 0)
+    colorText.BackgroundTransparency = 1
+    colorText.Text = text
+    colorText.TextColor3 = self.Config.Theme.Text
+    colorText.TextSize = 14
+    colorText.Font = Enum.Font.GothamMedium
+    colorText.TextXAlignment = Enum.TextXAlignment.Left
+    colorText.Parent = colorPicker
+
+    local preview = Instance.new("Frame")
+    preview.Name = "Preview"
+    preview.Size = UDim2.new(0, 30, 0, 30)
+    preview.Position = UDim2.new(1, -40, 0.5, -15)
+    preview.BackgroundColor3 = default or Color3.fromRGB(255, 255, 255)
+    preview.Parent = colorPicker
+
+    local previewCorner = Instance.new("UICorner")
+    previewCorner.CornerRadius = UDim.new(0, 4)
+    previewCorner.Parent = preview
+
+    -- Color Picker Panel
+    local panel = Instance.new("Frame")
+    panel.Name = "Panel"
+    panel.Size = UDim2.new(1, -20, 0, 150)
+    panel.Position = UDim2.new(0, 10, 0, 46)
+    panel.BackgroundColor3 = self.Config.Theme.Primary
+    panel.BackgroundTransparency = 0.1
+    panel.Visible = false
+    panel.Parent = colorPicker
+
+    local panelCorner = Instance.new("UICorner")
+    panelCorner.CornerRadius = UDim.new(0, 6)
+    panelCorner.Parent = panel
+
+    -- Color Gradient
+    local colorGradient = Instance.new("Frame")
+    colorGradient.Size = UDim2.new(1, -20, 0, 100)
+    colorGradient.Position = UDim2.new(0, 10, 0, 10)
+    colorGradient.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    colorGradient.Parent = panel
+
+    local colorCorner = Instance.new("UICorner")
+    colorCorner.CornerRadius = UDim.new(0, 4)
+    colorCorner.Parent = colorGradient
+
+    local gradientFrame = Instance.new("Frame")
+    gradientFrame.Size = UDim2.new(1, 0, 1, 0)
+    gradientFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    gradientFrame.Parent = colorGradient
+
+    local whiteGradient = Instance.new("UIGradient")
+    whiteGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+    })
+    whiteGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(1, 1)
+    })
+    whiteGradient.Parent = gradientFrame
+
+    local blackGradient = Instance.new("UIGradient")
+    blackGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))
+    })
+    blackGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 1),
+        NumberSequenceKeypoint.new(1, 0)
+    })
+    blackGradient.Rotation = 90
+    blackGradient.Parent = gradientFrame
+
+    -- Hue Slider
+    local hueSlider = Instance.new("Frame")
+    hueSlider.Size = UDim2.new(1, -20, 0, 20)
+    hueSlider.Position = UDim2.new(0, 10, 0, 120)
+    hueSlider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    hueSlider.Parent = panel
+
+    local hueCorner = Instance.new("UICorner")
+    hueCorner.CornerRadius = UDim.new(0, 4)
+    hueCorner.Parent = hueSlider
+
+    local hueGradient = Instance.new("UIGradient")
+    hueGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(0.167, Color3.fromRGB(255, 255, 0)),
+        ColorSequenceKeypoint.new(0.333, Color3.fromRGB(0, 255, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+        ColorSequenceKeypoint.new(0.667, Color3.fromRGB(0, 0, 255)),
+        ColorSequenceKeypoint.new(0.833, Color3.fromRGB(255, 0, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+    })
+    hueGradient.Parent = hueSlider
+
+    -- Color Selection Logic
+    local UserInputService = game:GetService("UserInputService")
+    local isOpen = false
+    local draggingHue = false
+    local draggingColor = false
+    local selectedColor = default or Color3.fromRGB(255, 255, 255)
+    local hue, sat, val = Color3.toHSV(selectedColor)
+
+    local function updateColor()
+        local color = Color3.fromHSV(hue, sat, val)
+        preview.BackgroundColor3 = color
+        colorGradient.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+        if callback then
+            callback(color)
+        end
+    end
+
+    preview.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            isOpen = not isOpen
+            panel.Visible = isOpen
+            if isOpen then
+                colorPicker.Size = UDim2.new(1, 0, 0, 206)
+            else
+                colorPicker.Size = UDim2.new(1, 0, 0, 36)
+            end
+        end
+    end)
+
+    hueSlider.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingHue = true
+        end
+    end)
+
+    colorGradient.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingColor = true
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            draggingHue = false
+            draggingColor = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            if draggingHue then
+                local x = (input.Position.X - hueSlider.AbsolutePosition.X) / hueSlider.AbsoluteSize.X
+                hue = math.clamp(x, 0, 1)
+                updateColor()
+            elseif draggingColor then
+                local x = (input.Position.X - colorGradient.AbsolutePosition.X) / colorGradient.AbsoluteSize.X
+                local y = (input.Position.Y - colorGradient.AbsolutePosition.Y) / colorGradient.AbsoluteSize.Y
+                sat = math.clamp(x, 0, 1)
+                val = 1 - math.clamp(y, 0, 1)
+                updateColor()
+            end
+        end
+    end)
+
+    return {
+        Instance = colorPicker,
+        SetColor = function(color)
+            hue, sat, val = Color3.toHSV(color)
+            updateColor()
+        end,
+        GetColor = function()
+            return preview.BackgroundColor3
+        end
+    }
+end
+
 
 return NebulaUI
