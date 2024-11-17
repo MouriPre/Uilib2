@@ -26,12 +26,13 @@ function RadarUI.new(title)
     -- Detect if on mobile
     local isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
     
+    -- Toggle Button (Fixed position)
     ui.ToggleButton = Instance.new("ImageButton")
     ui.ToggleButton.Size = UDim2.new(0, 50, 0, 50)
-    ui.ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)  -- Left center
+    ui.ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
     ui.ToggleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     ui.ToggleButton.BorderSizePixel = 0
-    ui.ToggleButton.Image = "rbxassetid://3926307971"  -- Power icon
+    ui.ToggleButton.Image = "rbxassetid://3926307971"
     ui.ToggleButton.ImageRectOffset = Vector2.new(324, 364)
     ui.ToggleButton.ImageRectSize = Vector2.new(36, 36)
     ui.ToggleButton.ImageColor3 = Color3.fromRGB(255, 255, 255)
@@ -43,7 +44,7 @@ function RadarUI.new(title)
     ToggleGlow.Position = UDim2.new(0.5, 0, 0.5, 0)
     ToggleGlow.AnchorPoint = Vector2.new(0.5, 0.5)
     ToggleGlow.BackgroundTransparency = 1
-    ToggleGlow.Image = "rbxassetid://4996891970"  -- Glow texture
+    ToggleGlow.Image = "rbxassetid://4996891970"
     ToggleGlow.ImageColor3 = Color3.fromRGB(45, 100, 255)
     ToggleGlow.ImageTransparency = 0.5
     ToggleGlow.Parent = ui.ToggleButton
@@ -53,14 +54,14 @@ function RadarUI.new(title)
     ToggleCorner.CornerRadius = UDim.new(0, 25)
     ToggleCorner.Parent = ui.ToggleButton
     
-    -- Main Container (Responsive size)
+    -- Main Container
     ui.MainFrame = Instance.new("Frame")
     ui.MainFrame.Name = "MainContainer"
     if isMobile then
-        ui.MainFrame.Size = UDim2.new(0.95, 0, 0.6, 0) -- 95% width, 60% height on mobile
+        ui.MainFrame.Size = UDim2.new(0.95, 0, 0.6, 0)
         ui.MainFrame.Position = UDim2.new(0.5, 0, 0.3, 0)
     else
-        ui.MainFrame.Size = UDim2.new(0, 800, 0, 500) -- Fixed size on PC
+        ui.MainFrame.Size = UDim2.new(0, 800, 0, 500)
         ui.MainFrame.Position = UDim2.new(0.5, -400, 0.5, -250)
     end
     ui.MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
@@ -69,12 +70,13 @@ function RadarUI.new(title)
     ui.MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
     ui.MainFrame.Parent = ui.ScreenGui
     
+    -- Add Blur Effect
     local BlurEffect = Instance.new("BlurEffect")
     BlurEffect.Size = 20
     BlurEffect.Parent = game:GetService("Lighting")
     BlurEffect.Enabled = false
     
-    -- Add Glow
+    -- Add Glow to Main Frame
     local GlowFrame = Instance.new("ImageLabel")
     GlowFrame.Size = UDim2.new(1.1, 0, 1.1, 0)
     GlowFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -85,11 +87,11 @@ function RadarUI.new(title)
     GlowFrame.ImageTransparency = 0.5
     GlowFrame.Parent = ui.MainFrame
     
-    -- Top Bar (Responsive height)
+    -- Top Bar
     ui.TopBar = Instance.new("Frame")
     ui.TopBar.Name = "TopBar"
     if isMobile then
-        ui.TopBar.Size = UDim2.new(1, 0, 0, 50) -- Taller on mobile
+        ui.TopBar.Size = UDim2.new(1, 0, 0, 50)
     else
         ui.TopBar.Size = UDim2.new(1, 0, 0, 40)
     end
@@ -97,36 +99,23 @@ function RadarUI.new(title)
     ui.TopBar.BorderSizePixel = 0
     ui.TopBar.Parent = ui.MainFrame
     
-    -- Title (Responsive text size)
+    -- Title
     ui.Title = Instance.new("TextLabel")
     ui.Title.Size = UDim2.new(0.5, 0, 1, 0)
     ui.Title.Position = UDim2.new(0, 15, 0, 0)
     ui.Title.BackgroundTransparency = 1
     ui.Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ui.Title.TextSize = isMobile and 24 or 20 -- Larger text on mobile
+    ui.Title.TextSize = isMobile and 24 or 20
     ui.Title.Font = Enum.Font.GothamBold
     ui.Title.Text = title or "Radar UI"
     ui.Title.TextXAlignment = Enum.TextXAlignment.Left
     ui.Title.Parent = ui.TopBar
     
-    -- Buttons (Larger on mobile)
-    local buttonSize = isMobile and 50 or 40
-    
-    -- Close Button
-    ui.CloseButton = Instance.new("TextButton")
-    ui.CloseButton.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-    ui.CloseButton.Position = UDim2.new(1, -buttonSize, 0, 0)
-    ui.CloseButton.BackgroundTransparency = 1
-    ui.CloseButton.Text = "×"
-    ui.CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ui.CloseButton.TextSize = isMobile and 30 or 24
-    ui.CloseButton.Font = Enum.Font.GothamBold
-    ui.CloseButton.Parent = ui.TopBar
-    
     -- Minimize Button
+    local buttonSize = isMobile and 50 or 40
     ui.MinimizeButton = Instance.new("TextButton")
     ui.MinimizeButton.Size = UDim2.new(0, buttonSize, 0, buttonSize)
-    ui.MinimizeButton.Position = UDim2.new(1, -(buttonSize * 2), 0, 0)
+    ui.MinimizeButton.Position = UDim2.new(1, -buttonSize, 0, 0)
     ui.MinimizeButton.BackgroundTransparency = 1
     ui.MinimizeButton.Text = "-"
     ui.MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -134,79 +123,13 @@ function RadarUI.new(title)
     ui.MinimizeButton.Font = Enum.Font.GothamBold
     ui.MinimizeButton.Parent = ui.TopBar
     
-    -- Add mobile-friendly touch controls
-    if isMobile then
-        -- Double tap to minimize
-        local lastTap = 0
-        ui.TopBar.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                local currentTime = tick()
-                if currentTime - lastTap < 0.5 then
-                    -- Double tap detected
-                    ui.MinimizeButton.MouseButton1Click:Fire()
-                end
-                lastTap = currentTime
-            end
-        end)
-    end
-    
-    -- Content Container (Adjusts based on TopBar height)
+    -- Content Frame
     ui.ContentFrame = Instance.new("Frame")
     ui.ContentFrame.Name = "ContentFrame"
     ui.ContentFrame.Size = UDim2.new(1, 0, 1, -(isMobile and 50 or 40))
     ui.ContentFrame.Position = UDim2.new(0, 0, 0, isMobile and 50 or 40)
     ui.ContentFrame.BackgroundTransparency = 1
     ui.ContentFrame.Parent = ui.MainFrame
-    
-    local isUIOpen = true
-    ui.ToggleButton.MouseButton1Click:Connect(function()
-        isUIOpen = not isUIOpen
-        
-        -- Animate toggle button
-        local rotation = isUIOpen and 0 or 180
-        local color = isUIOpen and Color3.fromRGB(45, 100, 255) or Color3.fromRGB(255, 255, 255)
-        CreateTween(ui.ToggleButton, {Rotation = rotation}, 0.3):Play()
-        CreateTween(ui.ToggleButton.ImageLabel, {ImageColor3 = color}, 0.3):Play()
-        
-        -- Animate main UI
-        if isUIOpen then
-            BlurEffect.Enabled = true
-            ui.MainFrame.Visible = true
-            if isMobile then
-                CreateTween(ui.MainFrame, {
-                    Size = UDim2.new(0.95, 0, 0.6, 0),
-                    Position = UDim2.new(0.5, 0, 0.3, 0),
-                    BackgroundTransparency = 0
-                }, 0.3):Play()
-            else
-                CreateTween(ui.MainFrame, {
-                    Size = UDim2.new(0, 800, 0, 500),
-                    Position = UDim2.new(0.5, -400, 0.5, -250),
-                    BackgroundTransparency = 0
-                }, 0.3):Play()
-            end
-            CreateTween(GlowFrame, {ImageTransparency = 0.5}, 0.3):Play()
-        else
-            CreateTween(ui.MainFrame, {
-                Size = UDim2.new(0, 0, 0, 0),
-                Position = UDim2.new(0.5, 0, 0.5, 0),
-                BackgroundTransparency = 1
-            }, 0.3).Completed:Connect(function()
-                ui.MainFrame.Visible = false
-                BlurEffect.Enabled = false
-            end)
-            CreateTween(GlowFrame, {ImageTransparency = 1}, 0.3):Play()
-        end
-    end)
-    
-    -- Add hover effect to toggle button
-    ui.ToggleButton.MouseEnter:Connect(function()
-        CreateTween(ui.ToggleButton, {BackgroundColor3 = Color3.fromRGB(45, 45, 50)}, 0.2):Play()
-    end)
-    
-    ui.ToggleButton.MouseLeave:Connect(function()
-        CreateTween(ui.ToggleButton, {BackgroundColor3 = Color3.fromRGB(30, 30, 35)}, 0.2):Play()
-    end)
     
     -- Add Rounded Corners
     local function AddCorners(instance, radius)
@@ -239,14 +162,48 @@ function RadarUI.new(title)
         end)
     end
     
-    AddButtonHoverEffect(ui.CloseButton)
     AddButtonHoverEffect(ui.MinimizeButton)
     
-    -- Close Button Logic
-    ui.CloseButton.MouseButton1Click:Connect(function()
-        CreateTween(ui.MainFrame, {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}, 0.3).Completed:Connect(function()
-            ui.ScreenGui:Destroy()
-        end)
+    -- Toggle Logic
+    local isUIOpen = true
+    ui.ToggleButton.MouseButton1Click:Connect(function()
+        isUIOpen = not isUIOpen
+        
+        -- Animate toggle button
+        local rotation = isUIOpen and 0 or 180
+        local color = isUIOpen and Color3.fromRGB(45, 100, 255) or Color3.fromRGB(255, 255, 255)
+        CreateTween(ui.ToggleButton, {Rotation = rotation}, 0.3):Play()
+        CreateTween(ToggleGlow, {ImageColor3 = color}, 0.3):Play()
+        
+        -- Animate main UI
+        if isUIOpen then
+            BlurEffect.Enabled = true
+            ui.MainFrame.Visible = true
+            if isMobile then
+                CreateTween(ui.MainFrame, {
+                    Size = UDim2.new(0.95, 0, 0.6, 0),
+                    Position = UDim2.new(0.5, 0, 0.3, 0),
+                    BackgroundTransparency = 0
+                }, 0.3):Play()
+            else
+                CreateTween(ui.MainFrame, {
+                    Size = UDim2.new(0, 800, 0, 500),
+                    Position = UDim2.new(0.5, -400, 0.5, -250),
+                    BackgroundTransparency = 0
+                }, 0.3):Play()
+            end
+            CreateTween(GlowFrame, {ImageTransparency = 0.5}, 0.3):Play()
+        else
+            CreateTween(ui.MainFrame, {
+                Size = UDim2.new(0, 0, 0, 0),
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                BackgroundTransparency = 1
+            }, 0.3).Completed:Connect(function()
+                ui.MainFrame.Visible = false
+                BlurEffect.Enabled = false
+            end)
+            CreateTween(GlowFrame, {ImageTransparency = 1}, 0.3):Play()
+        end
     end)
     
     -- Minimize Logic
@@ -307,8 +264,8 @@ function RadarUI.new(title)
         end)
     end
     
-    -- Opening Animation
-        if not isUIOpen then
+    -- Initial state
+    if not isUIOpen then
         ui.MainFrame.Visible = false
         ui.MainFrame.Size = UDim2.new(0, 0, 0, 0)
         ui.MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
