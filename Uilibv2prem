@@ -1030,27 +1030,9 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 	UserInputService.InputBegan:Connect(OnInputBegan)
 	UserInputService.InputEnded:Connect(OnInputEnded)
 
-	--// Also support direct touch input
-	local TouchStartConnection
-	TouchStartConnection = Slider.TouchBegan:Connect(function(touch)
-		OnInputBegan({
-			UserInputType = Enum.UserInputType.Touch,
-			Position = touch.Position
-		}, false)
-	end)
-
-	local TouchMoveConnection
-	TouchMoveConnection = Slider.TouchMoved:Connect(function(touch)
-		OnTouchMove(touch)
-	end)
-
-	local TouchEndConnection
-	TouchEndConnection = Slider.TouchEnded:Connect(function(touch)
-		OnInputEnded({
-			UserInputType = Enum.UserInputType.Touch,
-			Position = touch.Position
-		}, false)
-	end)
+	--// Make slider interactive
+	Slider.Active = true
+	Slider.AutoButtonColor = false
 
 	--// Update UI
 	Config:SetValue(Value)
