@@ -881,8 +881,6 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 	--// Input data
 	local Dragging = false
 	local MouseMoveConnection = nil
-	local TouchMoveConnection = nil
-	local InputType = Enum.UserInputType.MouseButton1
 	
 	local ObjectClass = self:NewInstance(Slider, Config)
 
@@ -907,18 +905,21 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		Label.Position = UDim2.new(1, 15-Diff.Offset, 0, 0)
 	end
 
-	function Config:SetValue(Value: number, Slider: false)
-		local MinValue = Config.MinValue
-		local MaxValue = Config.MaxValue
+	function Config:SetValue(Value: number, FromSlider: boolean)
+		local MinValue = Config.MinValue or 0
+		local MaxValue = Config.MaxValue or 100
 		local Difference = MaxValue - MinValue
 		local Percentage = (Value - MinValue) / Difference
 
-		if not Slider then
+		if not FromSlider then
 			Value = tonumber(Value)
+			Percentage = (Value - MinValue) / Difference
 		else
 			Percentage = Value
 			Value = MinValue + (Difference * Percentage)
 		end
+
+		Percentage = math.clamp(Percentage, 0, 1)
 
 		--// Animate grab
 		local Props = {
@@ -944,105 +945,112 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		return Config
 	end
 
-	------// Mouse Move events
-	local function MouseMove()
+	------// Calculate percentage from position
+	local function GetPercentageFromPosition(InputPosition)
+		local SliderX = Slider.AbsolutePosition.X
+		local SliderWidth = Slider.AbsoluteSize.X
+		
+		local Percentage = (InputPosition - SliderX) / SliderWidth
+		return math.clamp(Percentage, 0, 1)
+	end
+
+	------// Update slider on move
+	local function UpdateSlider(InputPosition)
 		if Config.ReadOnly then return end
 		if not Dragging then return end
 		
-		local MouseX = UserInputService:GetMouseLocation().X
-		local LeftPos = Slider.AbsolutePosition.X
-
-		local Percentage = (MouseX-LeftPos)/Slider.AbsoluteSize.X
-		Percentage = math.clamp(Percentage, 0, 1)
+		local Percentage = GetPercentageFromPosition(InputPosition)
 		Config:SetValue(Percentage, true)
 	end
 
-	------// Touch Move events (Mobile Support)
-	local function TouchMove(touch)
-		if Config.ReadOnly then return end
+	------// Mouse Move
+	local function OnMouseMove()
 		if not Dragging then return end
-		
+		local MouseX = Mouse.X
+		UpdateSlider(MouseX)
+	end
+
+	------// Touch Move
+	local function OnTouchMove(touch)
+		if not Dragging then return end
 		local TouchX = touch.Position.X
-		local LeftPos = Slider.AbsolutePosition.X
-
-		local Percentage = (TouchX-LeftPos)/Slider.AbsoluteSize.X
-		Percentage = math.clamp(Percentage, 0, 1)
-		Config:SetValue(Percentage, true)
+		UpdateSlider(TouchX)
 	end
 
-	------// Input Ended (Mouse + Touch)
-	local function InputEnded(inputObject)
-		if not Dragging then return end
-		if inputObject.UserInputType ~= InputType and inputObject.UserInputType ~= Enum.UserInputType.Touch then return end
-
-		Dragging = false
-		
-		if MouseMoveConnection then
-			MouseMoveConnection:Disconnect()
-			MouseMoveConnection = nil
-		end
-		
-		if TouchMoveConnection then
-			TouchMoveConnection:Disconnect()
-			TouchMoveConnection = nil
-		end
-	end
-
-	------// Input Began (Mouse + Touch)
-	local function InputBegan(inputObject)
+	------// Input Started
+	local function OnInputBegan(input, gameProcessed)
+		if gameProcessed then return end
 		if Config.ReadOnly then return end
 		
-		local IsMouseInput = inputObject.UserInputType == InputType
-		local IsTouchInput = inputObject.UserInputType == Enum.UserInputType.Touch
+		local IsMouseClick = input.UserInputType == Enum.UserInputType.MouseButton1
+		local IsTouch = input.UserInputType == Enum.UserInputType.Touch
 		
-		if not IsMouseInput and not IsTouchInput then return end
+		if not IsMouseClick and not IsTouch then return end
 
-		--// Check if hovering slider
-		local MousePos = UserInputService:GetMouseLocation()
-		local SliderBounds = Slider.AbsolutePosition
-		local SliderSize = Slider.AbsoluteSize
+		--// Check if clicking/touching slider
+		local InputPos = IsTouch and input.Position.X or Mouse.X
+		local SliderX = Slider.AbsolutePosition.X
+		local SliderWidth = Slider.AbsoluteSize.X
+		local SliderY = Slider.AbsolutePosition.Y
+		local SliderHeight = Slider.AbsoluteSize.Y
 
-		local IsHovering = (
-			MousePos.X >= SliderBounds.X and
-			MousePos.X <= SliderBounds.X + SliderSize.X and
-			MousePos.Y >= SliderBounds.Y and
-			MousePos.Y <= SliderBounds.Y + SliderSize.Y
-		)
+		local IsWithinX = InputPos >= SliderX and InputPos <= SliderX + SliderWidth
+		local IsWithinY = (IsTouch and input.Position.Y or Mouse.Y) >= SliderY and (IsTouch and input.Position.Y or Mouse.Y) <= SliderY + SliderHeight
 
-		if not IsHovering then return end
+		if not (IsWithinX and IsWithinY) then return end
 
 		Dragging = true
 
-		--// Handle Mouse
-		if IsMouseInput then
-			if MouseMoveConnection then
-				MouseMoveConnection:Disconnect()
-			end
-			MouseMoveConnection = Mouse.Move:Connect(MouseMove)
-			MouseMove()
-		end
-
-		--// Handle Touch
-		if IsTouchInput then
-			if TouchMoveConnection then
-				TouchMoveConnection:Disconnect()
-			end
-			TouchMoveConnection = inputObject.Changed:Connect(function()
-				if inputObject.UserInputState == Enum.UserInputState.End then
-					Dragging = false
-					TouchMoveConnection:Disconnect()
-					TouchMoveConnection = nil
-				else
-					TouchMove(inputObject)
-				end
-			end)
-			TouchMove(inputObject)
+		if IsMouseClick then
+			OnMouseMove()
+			if MouseMoveConnection then MouseMoveConnection:Disconnect() end
+			MouseMoveConnection = Mouse.Move:Connect(OnMouseMove)
+		elseif IsTouch then
+			OnTouchMove(input)
 		end
 	end
 
-	--// Connect input events
-	UserInputService.InputBegan:Connect(InputBegan)
-	UserInputService.InputEnded:Connect(InputEnded)
+	------// Input Ended
+	local function OnInputEnded(input, gameProcessed)
+		if not Dragging then return end
+		
+		local IsMouseRelease = input.UserInputType == Enum.UserInputType.MouseButton1
+		local IsTouchEnd = input.UserInputType == Enum.UserInputType.Touch
+
+		if IsMouseRelease or IsTouchEnd then
+			Dragging = false
+			if MouseMoveConnection then
+				MouseMoveConnection:Disconnect()
+				MouseMoveConnection = nil
+			end
+		end
+	end
+
+	------// Connect all events
+	UserInputService.InputBegan:Connect(OnInputBegan)
+	UserInputService.InputEnded:Connect(OnInputEnded)
+
+	--// Also support direct touch input
+	local TouchStartConnection
+	TouchStartConnection = Slider.TouchBegan:Connect(function(touch)
+		OnInputBegan({
+			UserInputType = Enum.UserInputType.Touch,
+			Position = touch.Position
+		}, false)
+	end)
+
+	local TouchMoveConnection
+	TouchMoveConnection = Slider.TouchMoved:Connect(function(touch)
+		OnTouchMove(touch)
+	end)
+
+	local TouchEndConnection
+	TouchEndConnection = Slider.TouchEnded:Connect(function(touch)
+		OnInputEnded({
+			UserInputType = Enum.UserInputType.Touch,
+			Position = touch.Position
+		}, false)
+	end)
 
 	--// Update UI
 	Config:SetValue(Value)
