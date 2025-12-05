@@ -4219,9 +4219,9 @@ function Fatality.new(Window: Window)
 			end
 
 			Fatality:CreateAnimation(FatalFrame,0.15,{
-				Size = Window.Scale,
-				BackgroundTransparency = 0,
-			})
+	Size = Window.Scale,
+	BackgroundTransparency = Window.BackgroundTransparency,
+})
 
 			Fatality:CreateAnimation(Header,0.5,{
 				BackgroundTransparency = 0,
