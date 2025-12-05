@@ -4396,16 +4396,17 @@ function Fatality.new(Window: Window)
 	protect_gui(Fatalitywin);
 
 	FatalFrame.Active = true;
-FatalFrame.Name = Fatality:RandomString()
-FatalFrame.Parent = Fatalitywin
-FatalFrame.AnchorPoint = Vector2.new(0.5, 0)
-FatalFrame.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
-FatalFrame.BackgroundTransparency = 0.1
-FatalFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-FatalFrame.BorderSizePixel = 0
-FatalFrame.Position = UDim2.new(0.5, 0, 0.1);
-FatalFrame.Size = UDim2.new(0, 720, 0, 480)
-FatalFrame.ClipsDescendants = true
+	FatalFrame.Name = Fatality:RandomString()
+	FatalFrame.Parent = Fatalitywin
+	FatalFrame.AnchorPoint = Vector2.new(0.5, 0)
+	FatalFrame.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
+	FatalFrame.BackgroundTransparency = 0.1
+	FatalFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	FatalFrame.BorderSizePixel = 0
+	FatalFrame.Size = UDim2.new(0, 720, 0, 480)
+	FatalFrame.Position = UDim2.new(0.550000012, 0, 0.1);
+	FatalFrame.Size = Window.Scale;
+	FatalFrame.ClipsDescendants = true
 
 	UICorner.CornerRadius = UDim.new(0, 5)
 	UICorner.Parent = FatalFrame
