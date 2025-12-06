@@ -6317,7 +6317,8 @@ function Compkiller.new(Config : Window)
 		Keybind = "Insert",
 		Logo = Compkiller.Logo;
 		Scale = Compkiller.Scale.Window,
-		TextSize = 15
+		TextSize = 15,
+		Position = UDim2.fromScale(0.5, 0.5)
 	});
 
 	local TabHover = Compkiller.__SIGNAL(false);
@@ -6390,7 +6391,7 @@ function Compkiller.new(Config : Window)
 
 	MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	MainFrame.BorderSizePixel = 0
-	MainFrame.Position = UDim2.fromScale(0.5,0.5);
+	MainFrame.Position = Config.Position -- Thay dòng này
 	MainFrame.Size = Compkiller.Scale.Window
 	MainFrame.ZIndex = 4
 
