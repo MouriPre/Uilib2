@@ -9588,41 +9588,41 @@ function Compkiller.new(Config : Window)
 			end;
 		end;
 
-		function WindowArgs:Watermark(Position)
-             local Signal = Compkiller.__SIGNAL(true);
-             
-            Position = Position or {
-            AnchorPoint = Vector2.new(0.5, 0),
-            Position = UDim2.new(0.5, 0, 0, 10)
-            }
+		function WindowArgs:Watermark()
+    local Signal = Compkiller.__SIGNAL(true);
 
-			local Watermark = Instance.new("Frame")
-			local UICorner = Instance.new("UICorner")
-			local Logo = Instance.new("Frame")
-			local UICorner_2 = Instance.new("UICorner")
-			local Frame = Instance.new("Frame")
-			local CompLogo = Instance.new("ImageLabel")
-			local WaternarkList = Instance.new("Frame")
-			local UIListLayout = Instance.new("UIListLayout")
+    local Watermark = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local Logo = Instance.new("Frame")
+    local UICorner_2 = Instance.new("UICorner")
+    local Frame = Instance.new("Frame")
+    local CompLogo = Instance.new("ImageLabel")
+    local WaternarkList = Instance.new("Frame")
+    local UIListLayout = Instance.new("UIListLayout")
 
-			Watermark.Name = Compkiller:_RandomString()
-            Watermark.Parent = CompKiller
-            Watermark.AnchorPoint = Position.AnchorPoint
-            Watermark.BackgroundColor3 = Compkiller.Colors.BGDBColor
+    Watermark.Name = Compkiller:_RandomString()
+    Watermark.Parent = CompKiller
 
-            Compkiller:Drag(Watermark , Watermark, 0.1);
+    -- ⭐⭐ Thay thế đoạn này ⭐⭐
+    Watermark.AnchorPoint = Config.AnchorPoint or Vector2.new(1, 0)
+    Watermark.Position    = Config.Position or UDim2.new(1, -10, 0, 10)
+    -- ⭐⭐ Hết phần sửa ⭐⭐
 
-            table.insert(Compkiller.Elements.BGDBColor,{
-            Element = Watermark,
-            Property = 'BackgroundColor3'
-            });
+    Watermark.BackgroundColor3 = Compkiller.Colors.BGDBColor
 
-           Watermark.BackgroundTransparency = 0.025
-           Watermark.BorderColor3 = Color3.fromRGB(0, 0, 0)
-           Watermark.BorderSizePixel = 0
-           Watermark.Position = Position.Position
-           Watermark.Size = UDim2.new(0, 45, 0, 23)
-           Watermark.ZIndex = 150
+    Compkiller:Drag(Watermark , Watermark, 0.1);
+
+    table.insert(Compkiller.Elements.BGDBColor,{
+        Element = Watermark,
+        Property = 'BackgroundColor3'
+    });
+
+    Watermark.BackgroundTransparency = 0.025
+    Watermark.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Watermark.BorderSizePixel = 0
+    Watermark.Size = UDim2.new(0, 45, 0, 23)
+    Watermark.ZIndex = 150
+
 
 			UICorner.CornerRadius = UDim.new(0, 3)
 			UICorner.Parent = Watermark
