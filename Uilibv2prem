@@ -11,9 +11,7 @@ export type Window = {
 	Name: string,
 	Keybind: string | Enum.KeyCode,
 	Scale: UDim2,
-	Expire: string,
-	Position: UDim2,                    
-	BackgroundTransparency: number      
+	Expire: string
 }
 
 export type Loader = {
@@ -1260,7 +1258,11 @@ function Fatality:ScrollSignal(Scroll: ScrollingFrame,UIListLayout: UIListLayout
 		UIListLayout:GetPropertyChangedSignal('AbsoluteContentSize'):Connect(function()
 			Scroll.CanvasSize = UDim2.fromOffset(0,UIListLayout.AbsoluteContentSize.Y)
 		end)
-	end;
+	end
+	
+	Scroll.ScrollingEnabled = true
+	Scroll.Active = true
+	Scroll.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 end;
 
 function Fatality:CreateResponse(args: {[string] : (any) -> any})
@@ -1356,6 +1358,8 @@ function Fatality:CreateOption(OptionButton: ImageButton): Elements
 	ScrollingFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 	ScrollingFrame.Size = UDim2.new(1, 0, 1, -5)
 	ScrollingFrame.ZIndex = 109
+	ScrollingFrame.ScrollingEnabled = true
+    ScrollingFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 	ScrollingFrame.ScrollBarThickness = 0
 
 	UIListLayout.Parent = ScrollingFrame
@@ -2233,6 +2237,8 @@ function Fatality:CreateDropdown(Parent: Frame, Default: string | {[string]: boo
 	ScrollingFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 	ScrollingFrame.Size = UDim2.new(1, -5, 1, -5)
 	ScrollingFrame.ZIndex = 109
+	ScrollingFrame.ScrollingEnabled = true
+    ScrollingFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 	ScrollingFrame.ScrollBarThickness = 0
 
 	UIListLayout.Parent = ScrollingFrame
@@ -3740,6 +3746,8 @@ function Fatality:CreateConfigWindow(Root: ScreenGui , Fatal , Button: ImageButt
 	ScrollingFrame.Position = UDim2.new(0, 8, 0, 8)
 	ScrollingFrame.Size = UDim2.new(1, -40, 1, -45)
 	ScrollingFrame.ZIndex = 207
+	ScrollingFrame.ScrollingEnabled = true
+    ScrollingFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 	ScrollingFrame.ScrollBarThickness = 0
 
 	UICorner_2.CornerRadius = UDim.new(0, 3)
@@ -4150,8 +4158,6 @@ function Fatality.new(Window: Window)
 	Window.Scale = Window.Scale or UDim2.new(0, 750, 0, 500);
 	Window.Keybind = Window.Keybind or "Insert";
 	Window.Expire = Window.Expire or "never";
-	Window.Position = Window.Position or UDim2.new(0.5, 0, 0.1);
-	Window.BackgroundTransparency = Window.BackgroundTransparency or 0;
 
 	local Fatal = {
 		Menus = {},
@@ -4219,9 +4225,9 @@ function Fatality.new(Window: Window)
 			end
 
 			Fatality:CreateAnimation(FatalFrame,0.15,{
-	Size = Window.Scale,
-	BackgroundTransparency = Window.BackgroundTransparency,
-})
+				Size = Window.Scale,
+				BackgroundTransparency = 0,
+			})
 
 			Fatality:CreateAnimation(Header,0.5,{
 				BackgroundTransparency = 0,
@@ -4400,16 +4406,15 @@ function Fatality.new(Window: Window)
 	protect_gui(Fatalitywin);
 
 	FatalFrame.Active = true;
-FatalFrame.Name = Fatality:RandomString()
-FatalFrame.Parent = Fatalitywin
-FatalFrame.AnchorPoint = Vector2.new(0.5, 0)
-FatalFrame.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
-FatalFrame.BackgroundTransparency = Window.BackgroundTransparency
-FatalFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-FatalFrame.BorderSizePixel = 0
-FatalFrame.Position = Window.Position
-FatalFrame.Size = Window.Scale;
-FatalFrame.ClipsDescendants = true
+	FatalFrame.Name = Fatality:RandomString()
+	FatalFrame.Parent = Fatalitywin
+	FatalFrame.AnchorPoint = Vector2.new(0.5, 0)
+	FatalFrame.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
+	FatalFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	FatalFrame.BorderSizePixel = 0
+	FatalFrame.Position = UDim2.new(0.5, 0, 0.2);
+	FatalFrame.Size = Window.Scale;
+	FatalFrame.ClipsDescendants = true
 
 	UICorner.CornerRadius = UDim.new(0, 5)
 	UICorner.Parent = FatalFrame
@@ -5336,6 +5341,8 @@ FatalFrame.ClipsDescendants = true
 			ScrollingFrame.Position = UDim2.new(0.5, 0, 0, 40)
 			ScrollingFrame.Size = UDim2.new(1, -20, 1, -50)
 			ScrollingFrame.ZIndex = 11
+			ScrollingFrame.ScrollingEnabled = true
+            ScrollingFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 			ScrollingFrame.ScrollBarThickness = 0
 
 			UICorner_3.CornerRadius = UDim.new(0, 3)
@@ -6037,6 +6044,8 @@ FatalFrame.ClipsDescendants = true
 		ScrollingFrame.Position = UDim2.new(0.5, 0, 0, 40)
 		ScrollingFrame.Size = UDim2.new(1, -15, 1, -45)
 		ScrollingFrame.ZIndex = 102
+		ScrollingFrame.ScrollingEnabled = true
+        ScrollingFrame.VerticalScrollBarInset = Enum.ScrollBarInset.ScrollBar
 		ScrollingFrame.ScrollBarThickness = 0
 
 		UIListLayout.Parent = ScrollingFrame
