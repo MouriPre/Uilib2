@@ -13,392 +13,9 @@
 		Compkiller:CustomIconHighlight()
 --]]
 
--- ============================================
--- LOCALIZATION SYSTEM - THÊM NGAY ĐỢI ĐÂY
--- ============================================
-
-local Localization = {
-	-- Danh sách ngôn ngữ được hỗ trợ
-	languages = {
-		"en", -- English
-		"vi", -- Tiếng Việt
-		"es", -- Español
-		"fr", -- Français
-		"de", -- Deutsch
-		"ja", -- 日本語
-		"zh", -- 中文
-		"ko"  -- 한국어
-	},
-	
-	-- Ngôn ngữ mặc định
-	defaultLanguage = "en",
-	
-	-- Ngôn ngữ hiện tại
-	currentLanguage = "en"
-};
-
--- Bảng dịch (Translation Table)
-Localization.translations = {
-	en = {
-		-- UI Headers
-		["UI.Keybinds"] = "Keybinds",
-		["UI.ConfigList"] = "Config List",
-		["UI.AddConfig"] = "Add Config",
-		["UI.UserSettings"] = "User Settings",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		-- Config Operations
-		["CONFIG.Save"] = "Save",
-		["CONFIG.Load"] = "Load",
-		["CONFIG.Delete"] = "Delete",
-		["CONFIG.ConfigName"] = "Config Name...",
-		
-		-- Notifications
-		["NOTIFY.ConfigCreated"] = "Create config \"%s\"",
-		["NOTIFY.ConfigLoaded"] = "Load config \"%s\"",
-		["NOTIFY.ConfigSaved"] = "Save config \"%s\"",
-		["NOTIFY.ConfigDeleted"] = "Delete config \"%s\"",
-		["NOTIFY.Title"] = "Configs",
-		
-		-- Elements
-		["ELEMENT.Toggle"] = "Toggle",
-		["ELEMENT.Slider"] = "Slider",
-		["ELEMENT.Dropdown"] = "Dropdown",
-		["ELEMENT.Button"] = "Button",
-		["ELEMENT.TextBox"] = "TextBox",
-		["ELEMENT.ColorPicker"] = "Color Picker",
-		
-		-- Keybind Modes
-		["KEYBIND.Off"] = "Off",
-		["KEYBIND.Hold"] = "Hold",
-		["KEYBIND.Toggle"] = "Toggle",
-		["KEYBIND.On"] = "On",
-		["KEYBIND.Key"] = "Key",
-		["KEYBIND.Mode"] = "Mode",
-		["KEYBIND.ONValue"] = "ON Value",
-		["KEYBIND.OFFValue"] = "OFF Value",
-		["KEYBIND.Name"] = "Name",
-	},
-	
-	vi = {
-		-- UI Headers
-		["UI.Keybinds"] = "Phím tắt",
-		["UI.ConfigList"] = "Danh sách cấu hình",
-		["UI.AddConfig"] = "Thêm cấu hình",
-		["UI.UserSettings"] = "Cài đặt người dùng",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		-- Config Operations
-		["CONFIG.Save"] = "Lưu",
-		["CONFIG.Load"] = "Tải",
-		["CONFIG.Delete"] = "Xóa",
-		["CONFIG.ConfigName"] = "Tên cấu hình...",
-		
-		-- Notifications
-		["NOTIFY.ConfigCreated"] = "Tạo cấu hình \"%s\"",
-		["NOTIFY.ConfigLoaded"] = "Tải cấu hình \"%s\"",
-		["NOTIFY.ConfigSaved"] = "Lưu cấu hình \"%s\"",
-		["NOTIFY.ConfigDeleted"] = "Xóa cấu hình \"%s\"",
-		["NOTIFY.Title"] = "Cấu hình",
-		
-		-- Elements
-		["ELEMENT.Toggle"] = "Bật/Tắt",
-		["ELEMENT.Slider"] = "Thanh trượt",
-		["ELEMENT.Dropdown"] = "Danh sách thả",
-		["ELEMENT.Button"] = "Nút",
-		["ELEMENT.TextBox"] = "Hộp văn bản",
-		["ELEMENT.ColorPicker"] = "Chọn màu",
-		
-		-- Keybind Modes
-		["KEYBIND.Off"] = "Tắt",
-		["KEYBIND.Hold"] = "Giữ",
-		["KEYBIND.Toggle"] = "Chuyển đổi",
-		["KEYBIND.On"] = "Bật",
-		["KEYBIND.Key"] = "Phím",
-		["KEYBIND.Mode"] = "Chế độ",
-		["KEYBIND.ONValue"] = "Giá trị BẬT",
-		["KEYBIND.OFFValue"] = "Giá trị TẮT",
-		["KEYBIND.Name"] = "Tên",
-	},
-	
-	es = {
-		["UI.Keybinds"] = "Teclas de acceso directo",
-		["UI.ConfigList"] = "Lista de configuración",
-		["UI.AddConfig"] = "Agregar configuración",
-		["UI.UserSettings"] = "Configuración de usuario",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		["CONFIG.Save"] = "Guardar",
-		["CONFIG.Load"] = "Cargar",
-		["CONFIG.Delete"] = "Eliminar",
-		["CONFIG.ConfigName"] = "Nombre de configuración...",
-		
-		["NOTIFY.ConfigCreated"] = "Crear configuración \"%s\"",
-		["NOTIFY.ConfigLoaded"] = "Cargar configuración \"%s\"",
-		["NOTIFY.ConfigSaved"] = "Guardar configuración \"%s\"",
-		["NOTIFY.ConfigDeleted"] = "Eliminar configuración \"%s\"",
-		["NOTIFY.Title"] = "Configuraciones",
-		
-		["ELEMENT.Toggle"] = "Alternar",
-		["ELEMENT.Slider"] = "Deslizador",
-		["ELEMENT.Dropdown"] = "Menú desplegable",
-		["ELEMENT.Button"] = "Botón",
-		["ELEMENT.TextBox"] = "Cuadro de texto",
-		["ELEMENT.ColorPicker"] = "Selector de color",
-		
-		["KEYBIND.Off"] = "Apagado",
-		["KEYBIND.Hold"] = "Mantener",
-		["KEYBIND.Toggle"] = "Alternar",
-		["KEYBIND.On"] = "Activado",
-		["KEYBIND.Key"] = "Tecla",
-		["KEYBIND.Mode"] = "Modo",
-		["KEYBIND.ONValue"] = "Valor ACTIVADO",
-		["KEYBIND.OFFValue"] = "Valor DESACTIVADO",
-		["KEYBIND.Name"] = "Nombre",
-	},
-	
-	fr = {
-		["UI.Keybinds"] = "Raccourcis clavier",
-		["UI.ConfigList"] = "Liste de configuration",
-		["UI.AddConfig"] = "Ajouter une configuration",
-		["UI.UserSettings"] = "Paramètres utilisateur",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		["CONFIG.Save"] = "Enregistrer",
-		["CONFIG.Load"] = "Charger",
-		["CONFIG.Delete"] = "Supprimer",
-		["CONFIG.ConfigName"] = "Nom de la configuration...",
-		
-		["NOTIFY.ConfigCreated"] = "Créer la configuration \"%s\"",
-		["NOTIFY.ConfigLoaded"] = "Charger la configuration \"%s\"",
-		["NOTIFY.ConfigSaved"] = "Enregistrer la configuration \"%s\"",
-		["NOTIFY.ConfigDeleted"] = "Supprimer la configuration \"%s\"",
-		["NOTIFY.Title"] = "Configurations",
-		
-		["ELEMENT.Toggle"] = "Basculer",
-		["ELEMENT.Slider"] = "Curseur",
-		["ELEMENT.Dropdown"] = "Liste déroulante",
-		["ELEMENT.Button"] = "Bouton",
-		["ELEMENT.TextBox"] = "Boîte de texte",
-		["ELEMENT.ColorPicker"] = "Sélecteur de couleur",
-		
-		["KEYBIND.Off"] = "Désactivé",
-		["KEYBIND.Hold"] = "Maintenir",
-		["KEYBIND.Toggle"] = "Basculer",
-		["KEYBIND.On"] = "Activé",
-		["KEYBIND.Key"] = "Clé",
-		["KEYBIND.Mode"] = "Mode",
-		["KEYBIND.ONValue"] = "Valeur ACTIVÉE",
-		["KEYBIND.OFFValue"] = "Valeur DÉSACTIVÉE",
-		["KEYBIND.Name"] = "Nom",
-	},
-	
-	de = {
-		["UI.Keybinds"] = "Tastenkombinationen",
-		["UI.ConfigList"] = "Konfigurationsliste",
-		["UI.AddConfig"] = "Konfiguration hinzufügen",
-		["UI.UserSettings"] = "Benutzereinstellungen",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		["CONFIG.Save"] = "Speichern",
-		["CONFIG.Load"] = "Laden",
-		["CONFIG.Delete"] = "Löschen",
-		["CONFIG.ConfigName"] = "Konfigurationsname...",
-		
-		["NOTIFY.ConfigCreated"] = "Konfiguration erstellen \"%s\"",
-		["NOTIFY.ConfigLoaded"] = "Konfiguration laden \"%s\"",
-		["NOTIFY.ConfigSaved"] = "Konfiguration speichern \"%s\"",
-		["NOTIFY.ConfigDeleted"] = "Konfiguration löschen \"%s\"",
-		["NOTIFY.Title"] = "Konfigurationen",
-		
-		["ELEMENT.Toggle"] = "Umschalten",
-		["ELEMENT.Slider"] = "Schieberegler",
-		["ELEMENT.Dropdown"] = "Dropdown-Menü",
-		["ELEMENT.Button"] = "Schaltfläche",
-		["ELEMENT.TextBox"] = "Textfeld",
-		["ELEMENT.ColorPicker"] = "Farbwähler",
-		
-		["KEYBIND.Off"] = "Aus",
-		["KEYBIND.Hold"] = "Halten",
-		["KEYBIND.Toggle"] = "Umschalten",
-		["KEYBIND.On"] = "Ein",
-		["KEYBIND.Key"] = "Taste",
-		["KEYBIND.Mode"] = "Modus",
-		["KEYBIND.ONValue"] = "AKTIVIERT Wert",
-		["KEYBIND.OFFValue"] = "DEAKTIVIERT Wert",
-		["KEYBIND.Name"] = "Name",
-	},
-	
-	ja = {
-		["UI.Keybinds"] = "キーバインド",
-		["UI.ConfigList"] = "設定リスト",
-		["UI.AddConfig"] = "設定を追加",
-		["UI.UserSettings"] = "ユーザー設定",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		["CONFIG.Save"] = "保存",
-		["CONFIG.Load"] = "読み込み",
-		["CONFIG.Delete"] = "削除",
-		["CONFIG.ConfigName"] = "設定名...",
-		
-		["NOTIFY.ConfigCreated"] = "設定を作成\"%s\"",
-		["NOTIFY.ConfigLoaded"] = "設定を読み込み\"%s\"",
-		["NOTIFY.ConfigSaved"] = "設定を保存\"%s\"",
-		["NOTIFY.ConfigDeleted"] = "設定を削除\"%s\"",
-		["NOTIFY.Title"] = "設定",
-		
-		["ELEMENT.Toggle"] = "トグル",
-		["ELEMENT.Slider"] = "スライダー",
-		["ELEMENT.Dropdown"] = "ドロップダウン",
-		["ELEMENT.Button"] = "ボタン",
-		["ELEMENT.TextBox"] = "テキストボックス",
-		["ELEMENT.ColorPicker"] = "カラーピッカー",
-		
-		["KEYBIND.Off"] = "オフ",
-		["KEYBIND.Hold"] = "ホールド",
-		["KEYBIND.Toggle"] = "トグル",
-		["KEYBIND.On"] = "オン",
-		["KEYBIND.Key"] = "キー",
-		["KEYBIND.Mode"] = "モード",
-		["KEYBIND.ONValue"] = "オン値",
-		["KEYBIND.OFFValue"] = "オフ値",
-		["KEYBIND.Name"] = "名前",
-	},
-	
-	zh = {
-		["UI.Keybinds"] = "快捷键",
-		["UI.ConfigList"] = "配置列表",
-		["UI.AddConfig"] = "添加配置",
-		["UI.UserSettings"] = "用户设置",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		["CONFIG.Save"] = "保存",
-		["CONFIG.Load"] = "加载",
-		["CONFIG.Delete"] = "删除",
-		["CONFIG.ConfigName"] = "配置名称...",
-		
-		["NOTIFY.ConfigCreated"] = "创建配置\"%s\"",
-		["NOTIFY.ConfigLoaded"] = "加载配置\"%s\"",
-		["NOTIFY.ConfigSaved"] = "保存配置\"%s\"",
-		["NOTIFY.ConfigDeleted"] = "删除配置\"%s\"",
-		["NOTIFY.Title"] = "配置",
-		
-		["ELEMENT.Toggle"] = "切换",
-		["ELEMENT.Slider"] = "滑块",
-		["ELEMENT.Dropdown"] = "下拉菜单",
-		["ELEMENT.Button"] = "按钮",
-		["ELEMENT.TextBox"] = "文本框",
-		["ELEMENT.ColorPicker"] = "颜色选择器",
-		
-		["KEYBIND.Off"] = "关闭",
-		["KEYBIND.Hold"] = "保持",
-		["KEYBIND.Toggle"] = "切换",
-		["KEYBIND.On"] = "打开",
-		["KEYBIND.Key"] = "键",
-		["KEYBIND.Mode"] = "模式",
-		["KEYBIND.ONValue"] = "开启值",
-		["KEYBIND.OFFValue"] = "关闭值",
-		["KEYBIND.Name"] = "名称",
-	},
-	
-	ko = {
-		["UI.Keybinds"] = "단축키",
-		["UI.ConfigList"] = "구성 목록",
-		["UI.AddConfig"] = "구성 추가",
-		["UI.UserSettings"] = "사용자 설정",
-		["UI.WindowName"] = "COMPKILLER",
-		
-		["CONFIG.Save"] = "저장",
-		["CONFIG.Load"] = "로드",
-		["CONFIG.Delete"] = "삭제",
-		["CONFIG.ConfigName"] = "구성 이름...",
-		
-		["NOTIFY.ConfigCreated"] = "구성 생성 \"%s\"",
-		["NOTIFY.ConfigLoaded"] = "구성 로드 \"%s\"",
-		["NOTIFY.ConfigSaved"] = "구성 저장 \"%s\"",
-		["NOTIFY.ConfigDeleted"] = "구성 삭제 \"%s\"",
-		["NOTIFY.Title"] = "구성",
-		
-		["ELEMENT.Toggle"] = "토글",
-		["ELEMENT.Slider"] = "슬라이더",
-		["ELEMENT.Dropdown"] = "드롭다운",
-		["ELEMENT.Button"] = "버튼",
-		["ELEMENT.TextBox"] = "텍스트 상자",
-		["ELEMENT.ColorPicker"] = "색상 선택기",
-		
-		["KEYBIND.Off"] = "끄기",
-		["KEYBIND.Hold"] = "유지",
-		["KEYBIND.Toggle"] = "토글",
-		["KEYBIND.On"] = "켜기",
-		["KEYBIND.Key"] = "키",
-		["KEYBIND.Mode"] = "모드",
-		["KEYBIND.ONValue"] = "켜기 값",
-		["KEYBIND.OFFValue"] = "끄기 값",
-		["KEYBIND.Name"] = "이름",
-	}
-};
-
--- Hàm dịch
-function Localization:Translate(key, ...)
-	local translation = self.translations[self.currentLanguage][key]
-	
-	if not translation then
-		-- Fallback về tiếng Anh nếu không tìm thấy
-		translation = self.translations[self.defaultLanguage][key] or key
-	end
-	
-	-- Hỗ trợ string formatting
-	local args = {...}
-	if #args > 0 then
-		return string.format(translation, ...)
-	end
-	
-	return translation
-end
-
--- Alias ngắn
-function Localization:T(key, ...)
-	return self:Translate(key, ...)
-end
-
--- Đặt ngôn ngữ hiện tại
-function Localization:SetLanguage(lang)
-	if table.find(self.languages, lang) then
-		self.currentLanguage = lang
-		return true
-	end
-	return false
-end
-
--- Lấy ngôn ngữ hiện tại
-function Localization:GetLanguage()
-	return self.currentLanguage
-end
-
--- Lấy danh sách ngôn ngữ được hỗ trợ
-function Localization:GetAvailableLanguages()
-	return self.languages
-end
-
--- Thêm bản dịch tùy chỉnh
-function Localization:AddTranslation(lang, key, value)
-	if not self.translations[lang] then
-		self.translations[lang] = {}
-	end
-	self.translations[lang][key] = value
-end
-
--- ============================================
--- KẾT THÚC LOCALIZATION SYSTEM
--- ============================================
--- Tiếp tục với code gốc của Compkiller từ đây trở đi
--- ============================================
-
 --- Export Types ---
 
 export type cloneref = (target: Instance) -> Instance;
-
--- ... (tiếp tục với phần còn lại của code gốc Compkiller)
 
 export type Window = {
 	Name: string,
@@ -2754,7 +2371,7 @@ function Compkiller:_CreateBlock(Signal)
 	BlockText.Size = UDim2.new(1, -20, 0, 25)
 	BlockText.ZIndex = 10
 	BlockText.Font = Enum.Font.GothamMedium
-	BlockText.Text = Localization:T("Block")
+	BlockText.Text = "Block"
 	BlockText.TextColor3 = Compkiller.Colors.SwitchColor
 	BlockText.TextSize = 14.000
 	BlockText.TextTransparency = 0.300
@@ -3717,7 +3334,7 @@ function Compkiller:_DrawKeybinds(Window: ScreenGui)
 	HeadLabel.Size = UDim2.new(1, -10, 1, 0)
 	HeadLabel.ZIndex = 156
 	HeadLabel.Font = Enum.Font.GothamMedium
-	HeadLabel.Text = Localization:T("UI.Keybinds")
+	HeadLabel.Text = "Keybinds"
 	HeadLabel.TextColor3 = Compkiller.Colors.SwitchColor
 	HeadLabel.TextSize = 12.000
 
@@ -6991,7 +6608,7 @@ end
 	UserText.Size = UDim2.new(0, 200, 0, 20)
 	UserText.ZIndex = 2
 	UserText.Font = Enum.Font.GothamMedium
-	UserText.Text = Localization:T("Username")
+	UserText.Text = "Username"
 	UserText.TextColor3 = Compkiller.Colors.SwitchColor
 	UserText.TextSize = 13.000
 	UserText.TextXAlignment = Enum.TextXAlignment.Left
@@ -7245,7 +6862,7 @@ end
 		HeaderText.Size = UDim2.new(0, 200, 0, 25)
 		HeaderText.ZIndex = 67
 		HeaderText.Font = Enum.Font.GothamMedium
-		HeaderText.Text = Localization:T("User Settings")
+		HeaderText.Text = "User Settings"
 		HeaderText.TextColor3 = Color3.fromRGB(255, 255, 255)
 		HeaderText.TextSize = 15.000
 
@@ -8085,7 +7702,7 @@ end
 		SectionText.Size = UDim2.new(0, 200, 0, 25)
 		SectionText.ZIndex = 10
 		SectionText.Font = Enum.Font.GothamMedium
-		SectionText.Text = Localization:T("UI.ConfigList")
+		SectionText.Text = "Config List"
 		SectionText.TextColor3 = Compkiller.Colors.SwitchColor
 		SectionText.TextSize = 14.000
 		SectionText.TextTransparency = 0.500
@@ -8176,7 +7793,7 @@ end
 		SectionText_2.Size = UDim2.new(0, 200, 0, 25)
 		SectionText_2.ZIndex = 10
 		SectionText_2.Font = Enum.Font.GothamMedium
-		SectionText_2 = Localization:T("Add Config")
+		SectionText_2.Text = "Add Config"
 		SectionText_2.TextColor3 = Compkiller.Colors.SwitchColor
 		SectionText_2.TextSize = 14.000
 		SectionText_2.TextTransparency = 0.500
@@ -8309,7 +7926,7 @@ end
 		TextLabel.Size = UDim2.new(1, 0, 1, 0)
 		TextLabel.ZIndex = 10
 		TextLabel.Font = Enum.Font.GothamMedium
-		TextLabel.Text = Localization:T("Add Config")
+		TextLabel.Text = "Add Config"
 		TextLabel.TextColor3 = Compkiller.Colors.SwitchColor
 		TextLabel.TextSize = 12.000
 		TextLabel.TextStrokeTransparency = 0.900
@@ -8655,7 +8272,7 @@ end
 			ConfigText.ZIndex = 10
 			ConfigText.Font = Enum.Font.GothamMedium
 			ConfigText.RichText = true;
-			ConfigText.Text = Localization:T("Config")
+			ConfigText.Text = "Config"
 			ConfigText.TextColor3 = Compkiller.Colors.SwitchColor
 			ConfigText.TextSize = 13.000
 			ConfigText.TextTransparency = 1
@@ -8730,7 +8347,7 @@ end
 			TextLabel.Size = UDim2.new(1, 0, 1, 0)
 			TextLabel.ZIndex = 14
 			TextLabel.Font = Enum.Font.GothamMedium
-			TextLabel.Text = Localization:T("Save")
+			TextLabel.Text = "Save"
 			TextLabel.TextColor3 = Compkiller.Colors.SwitchColor
 			TextLabel.TextSize = 12.000
 			TextLabel.TextStrokeTransparency = 1
@@ -8799,7 +8416,7 @@ end
 			TextLabel_2.Size = UDim2.new(1, 0, 1, 0)
 			TextLabel_2.ZIndex = 14
 			TextLabel_2.Font = Enum.Font.GothamMedium
-			TextLabel_2 = Localization:T("Load")
+			TextLabel_2.Text = "Load"
 			TextLabel_2.TextColor3 = Compkiller.Colors.SwitchColor
 			TextLabel_2.TextSize = 12.000
 			TextLabel_2.TextStrokeTransparency = 1
@@ -8847,7 +8464,7 @@ end
 			AuthorText.ZIndex = 10
 			AuthorText.Font = Enum.Font.GothamMedium
 			AuthorText.RichText = true;
-			AuthorText.Text = Localization:T("Author: <font color=\"rgb(17, 238, 253)\">NoFi</font>")
+			AuthorText.Text = "Author: <font color=\"rgb(17, 238, 253)\">NoFi</font>"
 			AuthorText.TextColor3 = Compkiller.Colors.SwitchColor
 			AuthorText.TextSize = 13.000
 			AuthorText.TextTransparency = 1
