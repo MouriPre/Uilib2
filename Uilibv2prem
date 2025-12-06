@@ -348,7 +348,8 @@ function Localization:Translate(key, ...)
 	end
 	
 	-- Hỗ trợ string formatting
-	if select("#", ...) > 0 then
+	local args = {...}
+	if #args > 0 then
 		return string.format(translation, ...)
 	end
 	
@@ -2753,7 +2754,7 @@ function Compkiller:_CreateBlock(Signal)
 	BlockText.Size = UDim2.new(1, -20, 0, 25)
 	BlockText.ZIndex = 10
 	BlockText.Font = Enum.Font.GothamMedium
-	BlockText.Text = "Block"
+	BlockText.Text = Localization:T("Block")
 	BlockText.TextColor3 = Compkiller.Colors.SwitchColor
 	BlockText.TextSize = 14.000
 	BlockText.TextTransparency = 0.300
@@ -3716,7 +3717,7 @@ function Compkiller:_DrawKeybinds(Window: ScreenGui)
 	HeadLabel.Size = UDim2.new(1, -10, 1, 0)
 	HeadLabel.ZIndex = 156
 	HeadLabel.Font = Enum.Font.GothamMedium
-	HeadLabel.Text = "Keybinds"
+	HeadLabel.Text = Localization:T("UI.Keybinds")
 	HeadLabel.TextColor3 = Compkiller.Colors.SwitchColor
 	HeadLabel.TextSize = 12.000
 
@@ -6990,7 +6991,7 @@ end
 	UserText.Size = UDim2.new(0, 200, 0, 20)
 	UserText.ZIndex = 2
 	UserText.Font = Enum.Font.GothamMedium
-	UserText.Text = "Username"
+	UserText.Text = Localization:T("Username")
 	UserText.TextColor3 = Compkiller.Colors.SwitchColor
 	UserText.TextSize = 13.000
 	UserText.TextXAlignment = Enum.TextXAlignment.Left
@@ -7244,7 +7245,7 @@ end
 		HeaderText.Size = UDim2.new(0, 200, 0, 25)
 		HeaderText.ZIndex = 67
 		HeaderText.Font = Enum.Font.GothamMedium
-		HeaderText.Text = "User Settings"
+		HeaderText.Text = Localization:T("User Settings")
 		HeaderText.TextColor3 = Color3.fromRGB(255, 255, 255)
 		HeaderText.TextSize = 15.000
 
@@ -8084,7 +8085,7 @@ end
 		SectionText.Size = UDim2.new(0, 200, 0, 25)
 		SectionText.ZIndex = 10
 		SectionText.Font = Enum.Font.GothamMedium
-		SectionText.Text = "Config List"
+		SectionText.Text = Localization:T("UI.ConfigList")
 		SectionText.TextColor3 = Compkiller.Colors.SwitchColor
 		SectionText.TextSize = 14.000
 		SectionText.TextTransparency = 0.500
@@ -8175,7 +8176,7 @@ end
 		SectionText_2.Size = UDim2.new(0, 200, 0, 25)
 		SectionText_2.ZIndex = 10
 		SectionText_2.Font = Enum.Font.GothamMedium
-		SectionText_2.Text = "Add Config"
+		SectionText_2 = Localization:T("Add Config")
 		SectionText_2.TextColor3 = Compkiller.Colors.SwitchColor
 		SectionText_2.TextSize = 14.000
 		SectionText_2.TextTransparency = 0.500
@@ -8308,7 +8309,7 @@ end
 		TextLabel.Size = UDim2.new(1, 0, 1, 0)
 		TextLabel.ZIndex = 10
 		TextLabel.Font = Enum.Font.GothamMedium
-		TextLabel.Text = "Add Config"
+		TextLabel.Text = Localization:T("Add Config")
 		TextLabel.TextColor3 = Compkiller.Colors.SwitchColor
 		TextLabel.TextSize = 12.000
 		TextLabel.TextStrokeTransparency = 0.900
@@ -8654,7 +8655,7 @@ end
 			ConfigText.ZIndex = 10
 			ConfigText.Font = Enum.Font.GothamMedium
 			ConfigText.RichText = true;
-			ConfigText.Text = "Config"
+			ConfigText.Text = Localization:T("Config")
 			ConfigText.TextColor3 = Compkiller.Colors.SwitchColor
 			ConfigText.TextSize = 13.000
 			ConfigText.TextTransparency = 1
@@ -8729,7 +8730,7 @@ end
 			TextLabel.Size = UDim2.new(1, 0, 1, 0)
 			TextLabel.ZIndex = 14
 			TextLabel.Font = Enum.Font.GothamMedium
-			TextLabel.Text = "Save"
+			TextLabel.Text = Localization:T("Save")
 			TextLabel.TextColor3 = Compkiller.Colors.SwitchColor
 			TextLabel.TextSize = 12.000
 			TextLabel.TextStrokeTransparency = 1
@@ -8798,7 +8799,7 @@ end
 			TextLabel_2.Size = UDim2.new(1, 0, 1, 0)
 			TextLabel_2.ZIndex = 14
 			TextLabel_2.Font = Enum.Font.GothamMedium
-			TextLabel_2.Text = "Load"
+			TextLabel_2 = Localization:T("Load")
 			TextLabel_2.TextColor3 = Compkiller.Colors.SwitchColor
 			TextLabel_2.TextSize = 12.000
 			TextLabel_2.TextStrokeTransparency = 1
@@ -8846,7 +8847,7 @@ end
 			AuthorText.ZIndex = 10
 			AuthorText.Font = Enum.Font.GothamMedium
 			AuthorText.RichText = true;
-			AuthorText.Text = "Author: <font color=\"rgb(17, 238, 253)\">NoFi</font>"
+			AuthorText.Text = Localization:T("Author: <font color=\"rgb(17, 238, 253)\">NoFi</font>")
 			AuthorText.TextColor3 = Compkiller.Colors.SwitchColor
 			AuthorText.TextSize = 13.000
 			AuthorText.TextTransparency = 1
