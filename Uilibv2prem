@@ -9588,7 +9588,8 @@ function Compkiller.new(Config : Window)
 			end;
 		end;
 
-		function WindowArgs:Watermark()
+		function WindowArgs:Watermark(Config)
+    Config = Config or {}
     local Signal = Compkiller.__SIGNAL(true);
 
     local Watermark = Instance.new("Frame")
@@ -9603,13 +9604,10 @@ function Compkiller.new(Config : Window)
     Watermark.Name = Compkiller:_RandomString()
     Watermark.Parent = CompKiller
 
-    -- ⭐⭐ Thay thế đoạn này ⭐⭐
-    Watermark.AnchorPoint = Config.AnchorPoint or Vector2.new(0.5, 0)
-    Watermark.Position    = Config.Position or UDim2.new(0.5, 0, 0, 10)
-    -- ⭐⭐ Hết phần sửa ⭐⭐
+    -- ⭐ Cho phép chỉnh ngoài
+    Watermark.AnchorPoint = Config.AnchorPoint or Vector2.new(1, 0)
 
     Watermark.BackgroundColor3 = Compkiller.Colors.BGDBColor
-
     Compkiller:Drag(Watermark , Watermark, 0.1);
 
     table.insert(Compkiller.Elements.BGDBColor,{
@@ -9620,6 +9618,10 @@ function Compkiller.new(Config : Window)
     Watermark.BackgroundTransparency = 0.025
     Watermark.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Watermark.BorderSizePixel = 0
+
+    -- ⭐ Cho phép chỉnh ngoài
+    Watermark.Position = Config.Position or UDim2.new(1, -10, 0, 10)
+
     Watermark.Size = UDim2.new(0, 45, 0, 23)
     Watermark.ZIndex = 150
 
