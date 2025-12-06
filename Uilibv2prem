@@ -6317,13 +6317,11 @@ function Compkiller.new(Config : Window)
 		Keybind = "Insert",
 		Logo = Compkiller.Logo;
 		Scale = Compkiller.Scale.Window,
-		TextSize = 15,
-		Position = UDim2.fromScale(0.5, 0.5)
+		TextSize = 15
 	});
 
 	local TabHover = Compkiller.__SIGNAL(false);
 	local WindowOpen = Compkiller.__SIGNAL(true);
-	
 	local WindowArgs = {
 		SelectedTab = nil,
 		Tabs = {},
@@ -6334,26 +6332,12 @@ function Compkiller.new(Config : Window)
 		PerformanceMode = false,
 		Notify = Compkiller.newNotify()
 	};
-	
-	function WindowArgs:SetLanguage(lang)
-		return Localization:SetLanguage(lang)
-	end
-
-	function WindowArgs:GetLanguage()
-		return Localization:GetLanguage()
-	end
-
-	function WindowArgs:GetAvailableLanguages()
-		return Localization:GetAvailableLanguages()
-	end
 
 	WindowArgs.Username = LocalPlayer.Name;
 
 	if Compkiller:_IsMobile() then
 		WindowArgs.AlwayShowTab = true;
 	end;
-	
-end
 
 	local CompKiller = Instance.new("ScreenGui")
 	local MainFrame = Instance.new("Frame")
@@ -6406,7 +6390,7 @@ end
 
 	MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	MainFrame.BorderSizePixel = 0
-	MainFrame.Position = Config.Position -- Thay dòng này
+	MainFrame.Position = UDim2.fromScale(0.5,0.5);
 	MainFrame.Size = Compkiller.Scale.Window
 	MainFrame.ZIndex = 4
 
