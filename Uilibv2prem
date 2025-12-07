@@ -6318,7 +6318,7 @@ function Compkiller.new(Config : Window)
 		Keybind = "Insert",
 		Logo = Compkiller.Logo;
 		Scale = Config.Scale or Compkiller.Scale.Window,
-		Position = UDim2.fromScale(0.5, 0.5),)
+		Position = UDim2.fromScale(0.5, 0.5),
 		TextSize = 15
 	});
 
