@@ -22,6 +22,7 @@ export type Window = {
 	Keybind: string | Enum.KeyCode,
 	Logo: string,
 	Scale: UDim2,
+	Position: UDim2,
 	TextSize: number
 };
 
@@ -6317,6 +6318,7 @@ function Compkiller.new(Config : Window)
 		Keybind = "Insert",
 		Logo = Compkiller.Logo;
 		Scale = Config.Scale or Compkiller.Scale.Window,
+		Position = UDim2.fromScale(0.5, 0.5),)
 		TextSize = 15
 	});
 
@@ -6390,7 +6392,7 @@ function Compkiller.new(Config : Window)
 
 	MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	MainFrame.BorderSizePixel = 0
-	MainFrame.Position = UDim2.fromScale(0.5,0.5);
+	MainFrame.Position = Config.Position;
 	MainFrame.Size = Compkiller.Scale.Window
 	MainFrame.ZIndex = 4
 
