@@ -6313,12 +6313,16 @@ function Compkiller.new(Config : Window)
 		end;
 	end;
 
+	if not Config.Position then
+		Config.Position = UDim2.fromScale(0.5, 0.5);
+	end;
+
 	Config = Compkiller.__CONFIG(Config , {
 		Name = "COMPKILLER",
 		Keybind = "Insert",
 		Logo = Compkiller.Logo;
 		Scale = Config.Scale or Compkiller.Scale.Window,
-		Position = UDim2.fromScale(0.5, 0.5),
+		Position = Config.Position or UDim2.fromScale(0.5, 0.5),
 		TextSize = 15
 	});
 
@@ -6392,8 +6396,8 @@ function Compkiller.new(Config : Window)
 
 	MainFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	MainFrame.BorderSizePixel = 0
-	MainFrame.Position = Config.Position;
-	MainFrame.Size = Compkiller.Scale.Window
+	MainFrame.Position = Config.Position;  -- ← Sửa dòng này
+	MainFrame.Size = Config.Scale  -- ← Cũng sửa dòng này
 	MainFrame.ZIndex = 4
 
 	MainFrame:GetPropertyChangedSignal('BackgroundTransparency'):Connect(function()
